@@ -1,0 +1,29 @@
+{
+	"name": "collection",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"lint": "prettier --plugin-search-dir . --check .",
+		"format": "prettier --plugin-search-dir . --write ."
+	},
+	"devDependencies": {
+		"@rollup/plugin-dsv": "^3.0.2",
+		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/adapter-static": "^3.0.0",
+		"@sveltejs/kit": "^2.5.0",
+		"prettier": "^3.2.4",
+		"prettier-plugin-svelte": "^3.1.2",
+		"svelte": "^4.2.9",
+		"vite": "^5.0.13"
+	},
+	"type": "module",
+	"dependencies": {
+		"d3": "^7.8.2",
+		"d3-hexjson": "^1.1.1",
+		"topojson-client": "^3.1.0",
+		"vega-embed": "^6.21.3"
+	}
+}
