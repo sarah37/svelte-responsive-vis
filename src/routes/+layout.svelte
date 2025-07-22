@@ -17,7 +17,8 @@
 </svelte:head>
 
 <div id="header">
-	<h1>Constraint-Based Breakpoints for Responsive Visualization</h1>
+	<h1>Responsive Visualization Collection</h1>
+	<h2>Experiments from <a href="https://sarahschoettler.com/">Sarah Schöttler</a>'s research</h2>
 	<Nav />
 </div>
 
@@ -26,21 +27,23 @@
 </div>
 
 <style>
-	h1 {
-		font-size: 2rem;
-		margin: 0.4rem 0;
-		background-image: linear-gradient(to right, #7a6cd7, #48d6be, #fafa5a);
-		background-clip: text;
-		-webkit-background-clip: text;
-		-moz-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		-moz-text-fill-color: transparent;
+	:global {
+		html,
+		body {
+			background: #fffff0;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+				'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+				'Noto Color Emoji';
+			--blue: #000cfb;
+			margin: 0;
+			padding: 0;
+		}
 	}
+
 	#header {
 		display: block;
 		background-color: #fff;
 		padding: 1rem 1rem 0.6rem;
-		box-shadow: #64646f33 0px 7px 29px 0px;
 	}
 	#content {
 		padding: 1rem;

@@ -1,6 +1,5 @@
 <script>
 	import { base } from '$app/paths';
-	import ComponentDetails from '$lib/components/ComponentDetails.svelte';
 </script>
 
 <svelte:head>
