@@ -102,11 +102,9 @@
 	};
 </script>
 
-{#if display}
-	<div
-		id={div}
-		style="display: {display
-			? 'block'
-			: 'none'}; height: {context.height}px; width: {context.width}px"
-	></div>
-{/if}
+<div
+	id={div}
+	style="display: {display
+		? 'block'
+		: 'none'}; height: {context.height}px; width: {context.width}px"
+></div>

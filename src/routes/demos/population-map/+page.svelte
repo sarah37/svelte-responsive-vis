@@ -108,7 +108,7 @@
 
 	// Vega Lite spec for bar charts (vertical + horizontal)
 	$: vl_barchart_vertical = {
-		$schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+		$schema: 'https://vega.github.io/schema/vega-lite/v6.json',
 		data: { values: getBarData(datasets[selectedDataset].data).default },
 		height: { step: 17 },
 		mark: 'bar',
@@ -138,7 +138,7 @@
 		}
 	};
 	$: vl_barchart_horizontal = {
-		$schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+		$schema: 'https://vega.github.io/schema/vega-lite/v6.json',
 		data: { values: getBarData(datasets[selectedDataset].data).default },
 		height: { step: 17 },
 		mark: 'bar',

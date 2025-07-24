@@ -12,7 +12,7 @@
 	let width, height;
 
 	const vl_spec_scatterplot = {
-		$schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+		$schema: 'https://vega.github.io/schema/vega-lite/v6.json',
 		data: {
 			values: data.default
 		},
@@ -24,7 +24,7 @@
 	};
 
 	const vl_spec_histogram_heatmap = {
-		$schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+		$schema: 'https://vega.github.io/schema/vega-lite/v6.json',
 		data: {
 			values: data.default
 		},
