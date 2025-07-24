@@ -3,7 +3,7 @@
 	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
 
-	import TestVis from '$lib/components/TestVis.svelte';
+	import TestVis from '$lib/components/vis/TestVis.svelte';
 
 	let width, height;
 

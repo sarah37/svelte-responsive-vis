@@ -5,9 +5,9 @@
 	import * as hex from '$lib/data/uk-election/test.hex.json';
 	import resultsRaw from '$lib/data/uk-election/HoC-GE2019-results-by-constituency-csv.csv?raw';
 
-	import ChoroplethMap from '$lib/components/ChoroplethMap.svelte';
-	import HexMap from '$lib/components/HexMap.svelte';
-	import WaffleChart from '$lib/components/WaffleChart.svelte';
+	import ChoroplethMap from '$lib/components/vis/ChoroplethMap.svelte';
+	import HexMap from '$lib/components/vis/HexMap.svelte';
+	import WaffleChart from '$lib/components/vis/WaffleChart.svelte';
 
 	import StatusBar from '$lib/components/StatusBar.svelte';
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';

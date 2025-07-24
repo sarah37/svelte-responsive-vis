@@ -7,7 +7,7 @@
 	import * as links from '$lib/data/les-mis/les-mis-links.json';
 	import * as nodes from '$lib/data/les-mis/les-mis-nodes.json';
 
-	import NetPanorama from '$lib/components/NetPanorama.svelte';
+	import NetPanorama from '$lib/components/vis/NetPanorama.svelte';
 
 	let width, height;
 

@@ -4,8 +4,8 @@
 	import * as data from '$lib/data/world-population/world_with_continent.json';
 	import * as data_americas from '$lib/data/world-population/subset_americas.json';
 
-	import CircleMap from '$lib/components/CircleMap.svelte';
-	import VegaLiteWrapper from '$lib/components/VegaLiteWrapper.svelte';
+	import CircleMap from '$lib/components/vis/CircleMap.svelte';
+	import VegaLiteWrapper from '$lib/components/vis/VegaLiteWrapper.svelte';
 
 	import StatusBar from '$lib/components/StatusBar.svelte';
 	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
