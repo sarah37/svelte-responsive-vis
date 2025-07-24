@@ -3,7 +3,7 @@
 
 	import * as map from '$lib/data/uk-election/merged.json';
 	import * as hex from '$lib/data/uk-election/test.hex.json';
-	import { default as results } from '$lib/data/uk-election/HoC-GE2019-results-by-constituency-csv.csv';
+	import resultsRaw from '$lib/data/uk-election/HoC-GE2019-results-by-constituency-csv.csv?raw';
 
 	import ChoroplethMap from '$lib/components/ChoroplethMap.svelte';
 	import HexMap from '$lib/components/HexMap.svelte';
@@ -16,6 +16,9 @@
 	export let width, height;
 	$: width;
 	$: height;
+
+	// parse csv from raw import
+	const results = d3.csvParse(resultsRaw);
 
 	const categories = [
 		'Con',
