@@ -1,8 +1,4 @@
 <script>
-	export let data, params, conditions; // provided by responsive vis component from spec
-	export let context, display; // provided by responsive vis component
-	export let checkConditions; // exported for use in responsive vis component
-
 	import * as d3 from 'd3';
 	import * as topojson from 'topojson-client';
 
@@ -10,8 +6,17 @@
 	import FillLegend from '$lib/components/vis/FillLegend.svelte';
 	import Tooltip from '$lib/components/vis/Tooltip.svelte';
 
-	$: height = context.height;
-	$: width = context.width;
+	let {
+		data,
+		params,
+		conditions, // ^ provided by responsive vis component from spec
+		context,
+		display, // ^ provided by responsive vis component
+		checkConditions = $bindable() // exported for use in responsive vis component
+	} = $props();
+
+	let height = $derived(context.height);
+	let width = $derived(context.width);
 
 	const topo = data.map;
 	const results = data.results;
@@ -46,10 +51,12 @@
 	const minArea = d3.min(geo.features.filter(filterFunc), (d) => d.area);
 
 	// compute scale and translate
-	$: ({ s, t } = fitRect([mapInitSize.width, mapInitSize.height], [width, height]));
+	let { s, t } = $derived(fitRect([mapInitSize.width, mapInitSize.height], [width, height]));
 
 	// Tooltip
-	let tx, ty, content;
+	let tx = $state(),
+		ty = $state(),
+		content = $state();
 	function handleMouseover(event, item) {
 		tx = event.layerX + 5;
 		ty = event.layerY;
@@ -93,7 +100,7 @@
 		>
 			<g id="polygons">
 				{#each geo.features as feature}
-					<!-- svelte-ignore a11y-no-static-element-interactions -->
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<path
 						class="area"
 						id={params.map_id(feature)}
@@ -101,10 +108,10 @@
 						fill={params.colorScale(
 							results.find((x) => x.ons_id === feature.properties.id).first_party
 						)}
-						on:focus={(e) => handleMouseover(e, feature)}
-						on:mouseover={(e) => handleMouseover(e, feature)}
-						on:mouseout={handleMouseout}
-						on:blur={handleMouseout}
+						onfocus={(e) => handleMouseover(e, feature)}
+						onmouseover={(e) => handleMouseover(e, feature)}
+						onmouseout={handleMouseout}
+						onblur={handleMouseout}
 					/>
 				{/each}
 			</g>

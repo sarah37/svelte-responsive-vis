@@ -1,16 +1,32 @@
 <script>
-	// Adapted for Svelte from https://observablehq.com/@harrystevens/circle-legend
+	/**
+	 * Adapted for Svelte from https://observablehq.com/@harrystevens/circle-legend
+	 * @typedef {Object} Props
+	 * @property {any} x
+	 * @property {any} y
+	 * @property {string} [anchorX]
+	 * @property {string} [anchorY]
+	 * @property {any} scale -  the scale function used for the circles
+	 * @property {any} tickValues
+	 * @property {any} [tickFormat]
+	 * @property {number} [tickSize]
+	 * @property {string} [color]
+	 * @property {number} [s] - scale factor for resizing
+	 */
 
-	export let x,
+	/** @type {Props} */
+	let {
+		x,
 		y,
 		anchorX = 'left',
-		anchorY = 'top', // position
-		scale, // the scale function used for the circles
+		anchorY = 'top',
+		scale,
 		tickValues,
 		tickFormat = (d) => d,
 		tickSize = 5,
 		color = '#000',
-		s = 1; // scale factor for resizing
+		s = 1
+	} = $props();
 
 	let ticks = tickValues || scale.ticks();
 	ticks.sort((a, b) => b - a);

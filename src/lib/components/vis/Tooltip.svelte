@@ -1,11 +1,13 @@
 <script>
-	export let x = -100;
-	export let y = -100;
-	export let content = '';
-	export let fontSize = 12,
+	let {
+		x = -100,
+		y = -100,
+		content = '',
+		fontSize = 12,
 		textAnchor = 'middle',
 		dominantBaseline = 'middle',
-		backgroundColor = 'transparent';
+		backgroundColor = 'transparent'
+	} = $props();
 </script>
 
 <text

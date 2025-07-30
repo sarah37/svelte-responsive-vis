@@ -1,17 +1,14 @@
 <script>
-	export let data, params, conditions; // provided by responsive vis component from spec
-	export let context, display; // provided by responsive vis component
-	export let checkConditions; // exported for use in responsive vis component
-
 	import * as d3 from 'd3';
 	import { renderHexJSON } from 'd3-hexjson';
 
 	import { fitRect } from '$lib/helpers.js';
 	import FillLegend from '$lib/components/vis/FillLegend.svelte';
 	import Tooltip from '$lib/components/vis/Tooltip.svelte';
+	let { data, params, conditions, context, display, checkConditions = $bindable() } = $props();
 
-	$: height = context.height;
-	$: width = context.width;
+	let height = $derived(context.height);
+	let width = $derived(context.width);
 
 	const hex = data.hex;
 	const results = data.results;
@@ -40,10 +37,12 @@
 	const hexWidth = d3.max(hexes[0].vertices, (d) => d.x) - d3.min(hexes[0].vertices, (d) => d.x);
 
 	// compute scale and translate (updated whenever width/height change)
-	$: ({ s, t } = fitRect([hexInitSize.w, hexInitSize.h], [width, height]));
+	let { s, t } = $derived(fitRect([hexInitSize.w, hexInitSize.h], [width, height]));
 
 	// tooltip
-	let tx, ty, content;
+	let tx = $state(),
+		ty = $state(),
+		content = $state();
 	function handleMouseover(event, item) {
 		tx = event.layerX + 5;
 		ty = event.layerY;
@@ -84,7 +83,7 @@
 		>
 			{#each hexes as hex}
 				<g transform="translate({hex.x},{hex.y})">
-					<!-- svelte-ignore a11y-no-static-element-interactions -->
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<polygon
 						class="hex"
 						points={hex.points}
@@ -92,10 +91,10 @@
 						stroke-width="2"
 						fill={params.colorScale(results.find((x) => x.ons_id === hex.key).first_party)}
 						clip-path="url(#hex-clip-path)"
-						on:focus={(e) => handleMouseover(e, hex)}
-						on:mouseover={(e) => handleMouseover(e, hex)}
-						on:mouseout={handleMouseout}
-						on:blur={handleMouseout}
+						onfocus={(e) => handleMouseover(e, hex)}
+						onmouseover={(e) => handleMouseover(e, hex)}
+						onmouseout={handleMouseout}
+						onblur={handleMouseout}
 					/>
 				</g>
 			{/each}

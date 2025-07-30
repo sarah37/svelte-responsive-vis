@@ -1,12 +1,9 @@
 <script>
-	export let data, params, conditions; // provided by responsive vis component from spec
-	export let context, display; // provided by responsive vis component
-	export let checkConditions; // exported for use in responsive vis component
-
 	import Tooltip from '$lib/components/vis/Tooltip.svelte';
+	let { data, params, conditions, context, display, checkConditions = $bindable() } = $props();
 
-	$: height = context.height;
-	$: width = context.width;
+	let height = $derived(context.height);
+	let width = $derived(context.width);
 
 	const results = data.results;
 
@@ -45,17 +42,22 @@
 	let margin = 3;
 	let gap = 10; // gap for horizontal version
 
-	let w, h, s, row_col, translate;
-	$: w = width - margin * 2;
-	$: h = wide ? height - label - margin * 2 : height - label * n_categories - margin * 2; // 20px for each header, 5px *2 for margins
-	$: s = wide
-		? Math.pow(((w * h) / n_datapoints) * 0.5, 0.56)
-		: Math.pow(((w * h) / n_datapoints) * 0.8, 0.51);
-	$: row_col = wide ? Math.floor(h / s) : Math.floor(w / s);
-	$: translate = partsSums(countries.map((d) => Math.ceil(d.data.length / row_col) * s));
+	let w = $derived(width - margin * 2),
+		h = $derived(wide ? height - label - margin * 2 : height - label * n_categories - margin * 2),
+		s = $derived(
+			wide
+				? Math.pow(((w * h) / n_datapoints) * 0.5, 0.56)
+				: Math.pow(((w * h) / n_datapoints) * 0.8, 0.51)
+		),
+		row_col = $derived(wide ? Math.floor(h / s) : Math.floor(w / s)),
+		translate = $derived(partsSums(countries.map((d) => Math.ceil(d.data.length / row_col) * s)));
+
+	// 20px for each header, 5px *2 for margins
 
 	// Tooltip
-	let x, y, content;
+	let x = $state(),
+		y = $state(),
+		content = $state();
 	function handleMouseover(event, item) {
 		x = event.layerX + 5;
 		y = event.layerY;
@@ -93,7 +95,7 @@
 							>{wide && country.country == 'Northern Ireland' ? 'NI' : country.country}</text
 						>
 						{#each country.data as item, j}
-							<!-- svelte-ignore a11y-no-static-element-interactions -->
+							<!-- svelte-ignore a11y_no_static_element_interactions -->
 							<rect
 								width={s}
 								height={s}
@@ -102,10 +104,10 @@
 								x={wide ? Math.floor(j / row_col) * s : (j % row_col) * s}
 								y={wide ? (j % row_col) * s : Math.floor(j / row_col) * s}
 								fill={params.colorScale(item.first_party)}
-								on:focus={(e) => handleMouseover(e, item)}
-								on:mouseover={(e) => handleMouseover(e, item)}
-								on:mouseout={handleMouseout}
-								on:blur={handleMouseout}
+								onfocus={(e) => handleMouseover(e, item)}
+								onmouseover={(e) => handleMouseover(e, item)}
+								onmouseout={handleMouseout}
+								onblur={handleMouseout}
 							/>
 						{/each}
 					</g>
