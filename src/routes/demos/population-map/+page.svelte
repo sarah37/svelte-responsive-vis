@@ -11,7 +11,8 @@
 	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
 
-	let width, height;
+	let width = $state(),
+		height = $state();
 
 	const datasets = {
 		world: {
@@ -39,7 +40,7 @@
 		}
 	};
 	const datasetsKeys = Object.keys(datasets);
-	let selectedDataset = 'world';
+	let selectedDataset = $state('world');
 
 	// colors for circles/bars colored by continent
 	const continents = {
@@ -59,10 +60,11 @@
 		americas: [schemeTableau10[0], schemeTableau10[3]]
 	};
 
-	$: circleColor = (d) =>
+	let circleColor = $derived((d) =>
 		scaleOrdinal().domain(continents[selectedDataset]).range(continent_colors[selectedDataset])(
 			d.properties.continent
-		);
+		)
+	);
 
 	// configure circle legend
 	const legend = {
@@ -107,7 +109,7 @@
 	}
 
 	// Vega Lite spec for bar charts (vertical + horizontal)
-	$: vl_barchart_vertical = {
+	let vl_barchart_vertical = $derived({
 		$schema: 'https://vega.github.io/schema/vega-lite/v6.json',
 		data: { values: getBarData(datasets[selectedDataset].data).default },
 		height: { step: 17 },
@@ -136,8 +138,8 @@
 				legend: { orient: 'top-right', title: null, offset: 5 }
 			}
 		}
-	};
-	$: vl_barchart_horizontal = {
+	});
+	let vl_barchart_horizontal = $derived({
 		$schema: 'https://vega.github.io/schema/vega-lite/v6.json',
 		data: { values: getBarData(datasets[selectedDataset].data).default },
 		height: { step: 17 },
@@ -166,11 +168,11 @@
 				legend: { orient: 'bottom-right', title: null, offset: 5 }
 			}
 		}
-	};
+	});
 
-	let arConditions = false;
+	let arConditions = $state(false);
 
-	$: views = [
+	let views = $derived([
 		{
 			type: CircleMap, // configured as proportional circle map
 			data: datasets[selectedDataset].data,
@@ -227,9 +229,10 @@
 			},
 			conditions: {}
 		}
-	];
+	]);
 
-	let viewLandscape, landscapeOverlay;
+	let viewLandscape = $state(),
+		landscapeOverlay = $state();
 </script>
 
 <svelte:head>

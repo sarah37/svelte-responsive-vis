@@ -9,7 +9,8 @@
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
 	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
 
-	let width, height;
+	let width = $state(),
+		height = $state();
 
 	const vl_spec_scatterplot = {
 		$schema: 'https://vega.github.io/schema/vega-lite/v6.json',
@@ -72,13 +73,12 @@
 		}
 	];
 
-	let viewLandscape = {
+	let viewLandscape = $state({
 		mode: 'static',
 		imgSrc: `${base}/img/scatterplot_view_landscape.png`,
 		size: [1000, 800]
-	};
-	let landscapeOverlay;
-	$: landscapeOverlay;
+	});
+	let landscapeOverlay = $state();
 </script>
 
 <svelte:head>

@@ -13,9 +13,8 @@
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
 	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
 
-	export let width, height;
-	$: width;
-	$: height;
+	let width = $state();
+	let height = $state();
 
 	// parse csv from raw import
 	const results = d3.csvParse(resultsRaw);
@@ -62,9 +61,9 @@
 
 	let colorScale = d3.scaleOrdinal().domain(categories).range(colors);
 
-	let arConditions = false;
+	let arConditions = $state(false);
 
-	$: views = [
+	let views = $derived([
 		{
 			type: ChoroplethMap,
 			data: { map, results },
@@ -109,10 +108,10 @@
 			params: { colorScale, orientation: 'horizontal' },
 			conditions: {}
 		}
-	];
+	]);
 
-	let viewLandscape,
-		landscapeOverlay = false;
+	let viewLandscape = $state(),
+		landscapeOverlay = $state(false);
 </script>
 
 <svelte:head>

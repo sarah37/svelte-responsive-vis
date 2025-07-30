@@ -9,7 +9,8 @@
 
 	import NetPanorama from '$lib/components/vis/NetPanorama.svelte';
 
-	let width, height;
+	let width = $state(),
+		height = $state();
 
 	// user can select a dataset using the dropdown menu
 	const datasets = {
@@ -108,10 +109,9 @@
 	};
 	const datasetsKeys = Object.keys(datasets);
 	let selectedDataset = 'lesmis';
-	$: console.log('Dataset updated: ', selectedDataset);
 
 	// based on: https://netpanorama-editor.netlify.app/#marie-boucher
-	$: spec_nodelink = {
+	let spec_nodelink = $derived({
 		...datasets[selectedDataset].size.nodelink,
 		data: datasets[selectedDataset].data,
 		networks: datasets[selectedDataset].networks,
@@ -162,10 +162,10 @@
 				}
 			}
 		]
-	};
+	});
 
 	// based on: https://netpanorama-editor.netlify.app/#arc-diagram
-	$: spec_arcdiagram = {
+	let spec_arcdiagram = $derived({
 		...datasets[selectedDataset].size.arcdiagram,
 		data: datasets[selectedDataset].data,
 		networks: datasets[selectedDataset].networks,
@@ -234,9 +234,9 @@
 				}
 			}
 		]
-	};
+	});
 
-	$: spec_adjacency_matrix = {
+	let spec_adjacency_matrix = $derived({
 		...datasets[selectedDataset].size.adjacency_matrix,
 		data: datasets[selectedDataset].data,
 		networks: datasets[selectedDataset].networks,
@@ -309,9 +309,9 @@
 				}
 			}
 		]
-	};
+	});
 
-	$: views = [
+	let views = $derived([
 		{
 			type: NetPanorama,
 			data: null, // data is included in spec
@@ -331,9 +331,10 @@
 			params: { data: selectedDataset, spec: spec_nodelink },
 			conditions: {}
 		}
-	];
+	]);
 
-	let viewLandscape, landscapeOverlay;
+	let viewLandscape = $state(),
+		landscapeOverlay = $state();
 </script>
 
 <svelte:head>

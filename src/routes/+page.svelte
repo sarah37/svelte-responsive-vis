@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Constraint-Based Breakpoints | About</title>
+	<title>Constraint-Based Breakpoints</title>
 </svelte:head>
 
-<div id="container"></div>
+<div id="container">Choose an example visualization on the left.</div>

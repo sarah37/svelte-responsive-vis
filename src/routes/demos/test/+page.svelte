@@ -5,7 +5,8 @@
 
 	import TestVis from '$lib/components/vis/TestVis.svelte';
 
-	let width, height;
+	let width = $state(),
+		height = $state();
 
 	const views = [
 		{
@@ -28,8 +29,8 @@
 		}
 	];
 
-	let viewLandscape,
-		landscapeOverlay = false;
+	let viewLandscape = $state(),
+		landscapeOverlay = $state(false);
 </script>
 
 <svelte:head>

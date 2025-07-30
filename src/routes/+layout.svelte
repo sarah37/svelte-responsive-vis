@@ -1,6 +1,8 @@
 <script>
 	import Sidebar from '$lib/components/Sidebar.svelte';
 
+	let { children } = $props();
+
 	let collapsed = false;
 </script>
 
@@ -9,7 +11,7 @@
 		<Sidebar />
 	</div>
 	<div id="content">
-		<slot />
+		{@render children?.()}
 	</div>
 </div>
 
