@@ -12,9 +12,10 @@
 </p>
 <hr />
 <p>
-	<!-- can't have any whitespace in here -->
-	<span class="left"><strong>Current size</strong></span><span class="stats">Width: {width}px</span
-	><span class="stats">Height: {height}px</span><span class="stats">Aspect ratio: {divAR}</span>
+	<span class="left"><strong>Current size</strong></span>
+	<span class="stats">Width: {width}px</span>
+	<span class="stats">Height: {height}px</span>
+	<span class="stats">Aspect ratio: {divAR}</span>
 </p>
 <hr />
 <p>
