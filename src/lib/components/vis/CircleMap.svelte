@@ -1,11 +1,4 @@
 <script>
-	export let data, params, conditions; // provided by responsive vis component from spec
-	export let context, display; // provided by responsive vis component
-	export let checkConditions; // exported for use in responsive vis component
-
-	$: height = context.height;
-	$: width = context.width;
-
 	import {
 		geoPath,
 		scaleSqrt,
@@ -19,57 +12,75 @@
 	import Tooltip from '$lib/components/vis/Tooltip.svelte';
 	import CircleLegend from '$lib/components/vis/CircleLegend.svelte';
 
-	let map, circles;
+	let { data, params, conditions, context, display, checkConditions = $bindable() } = $props();
+
+	let map = $state(),
+		circles = $state();
 
 	// arbitrary size for svg viewbox
 	const initW = 500,
 		initH = 500;
 
+	let height = $derived(context.height);
+	let width = $derived(context.width);
+
 	// fit projection to container + geo data
-	$: projection = params.projection;
-	$: projection.fitSize([initW, initH], data);
-	$: path = geoPath(projection);
-
-	$: bounds = path.bounds(data);
-	$: mapAR = (bounds[1][0] - bounds[0][0]) / (bounds[1][1] - bounds[0][1]);
-
-	$: mapInitSize =
+	let projection = $derived(params.projection.fitSize([initW, initH], data));
+	let path = $derived(geoPath(projection));
+	let bounds = $derived(path.bounds(data));
+	let mapAR = $derived((bounds[1][0] - bounds[0][0]) / (bounds[1][1] - bounds[0][1]));
+	let mapInitSize = $derived(
 		initW / initH < mapAR
 			? { width: initW, height: initW / mapAR }
-			: { width: initH * mapAR, height: initH };
-
+			: { width: initH * mapAR, height: initH }
+	);
 	// circle radius (slightly bigger for Dorling)
-	$: r = scaleSqrt()
-		.domain([0, d3max(data.features, (d) => d.properties.POP_EST)])
-		.range([0, params.maxCircle]);
+	let r = $derived(
+		scaleSqrt()
+			.domain([0, d3max(data.features, (d) => d.properties.POP_EST)])
+			.range([0, params.maxCircle])
+	);
 
-	$: if (params.dorling) {
-		// get Dorling cartogram positions
-		// adds/updates d.x and d.y
-		let dorlingSimulation = forceSimulation(data.features)
-			.force(
-				'x',
-				forceX((d) => projection(d.properties.centroid)[0])
-			)
-			.force(
-				'y',
-				forceY((d) => projection(d.properties.centroid)[1])
-			)
-			.force(
-				'collide',
-				forceCollide((d) => r(d.properties.POP_EST))
-			)
-			.stop();
-		dorlingSimulation.tick(200);
-		data.features.forEach(function (d) {
-			d.properties.dorlingX = d.x;
-			d.properties.dorlingY = d.y;
-		});
-	}
+	$effect(() => {
+		if (params.dorling) {
+			// get Dorling cartogram positions
+			// adds/updates d.x and d.y
+			let dorlingSimulation = forceSimulation(data.features)
+				.force(
+					'x',
+					forceX((d) => projection(d.properties.centroid)[0])
+				)
+				.force(
+					'y',
+					forceY((d) => projection(d.properties.centroid)[1])
+				)
+				.force(
+					'collide',
+					forceCollide((d) => r(d.properties.POP_EST))
+				)
+				.stop();
+			dorlingSimulation.tick(200);
+			data.features.forEach(function (d) {
+				d.properties.dorlingX = d.x;
+				d.properties.dorlingY = d.y;
+			});
+		}
+	});
+
+	// compute scale + translate so that map is always at max size, centered within the container
+	let s = $derived(
+		mapAR > width / height ? width / mapInitSize.width : height / mapInitSize.height
+	);
+	let t = $derived(
+		mapAR < width / height
+			? [(width - s * mapInitSize.width) / 2, 0]
+			: [0, (height - s * mapInitSize.height) / 2]
+	);
 
 	// Tooltip
-	let x, y, content;
-	$: (x, y, content);
+	let x = $state(),
+		y = $state(),
+		content = $state();
 	function handleMouseover(event, feature) {
 		x = params.dorling ? feature.properties.dorlingX : projection(feature.properties.centroid)[0];
 		y = params.dorling ? feature.properties.dorlingY : projection(feature.properties.centroid)[1];
@@ -81,17 +92,9 @@
 		content = '';
 	}
 
-	// compute scale + translate so that map is always at max size, centered within the container
-	let s = 1;
-	$: s = mapAR > width / height ? width / mapInitSize.width : height / mapInitSize.height;
-	$: t =
-		mapAR < width / height
-			? [(width - s * mapInitSize.width) / 2, 0]
-			: [0, (height - s * mapInitSize.height) / 2];
-
 	// calculate some things for conditions
-	$: pop_vals = data.features.map((d) => d.properties.POP_EST);
-	$: lower_bound = pop_vals.sort((a, b) => a - b)[Math.floor(pop_vals.length * 0.1)];
+	let pop_vals = $derived(data.features.map((d) => d.properties.POP_EST));
+	let lower_bound = $derived(pop_vals.sort((a, b) => a - b)[Math.floor(pop_vals.length * 0.1)]);
 
 	checkConditions = function (w, h) {
 		let s = mapAR > w / h ? w / mapInitSize.width : h / mapInitSize.height;
@@ -125,7 +128,7 @@
 			</g>
 			<g id="circles" bind:this={circles}>
 				{#each data.features as feature}
-					<!-- svelte-ignore a11y-no-static-element-interactions -->
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<circle
 						r={r(feature.properties.POP_EST)}
 						cx={params.dorling
@@ -138,10 +141,10 @@
 						stroke={params.circleColor(feature)}
 						fill-opacity="0.4"
 						stroke-width="{1 / s}px"
-						on:focus={(e) => handleMouseover(e, feature)}
-						on:mouseover={(e) => handleMouseover(e, feature)}
-						on:mouseout={handleMouseout}
-						on:blur={handleMouseout}
+						onfocus={(e) => handleMouseover(e, feature)}
+						onmouseover={(e) => handleMouseover(e, feature)}
+						onmouseout={handleMouseout}
+						onblur={handleMouseout}
 					/>
 				{/each}
 			</g>
