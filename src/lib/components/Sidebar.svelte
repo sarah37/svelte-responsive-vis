@@ -1,7 +1,7 @@
 <script>
 	import { base } from '$app/paths';
 
-	let showDropdown = false;
+	let showDropdown = $state(false);
 
 	function toggleDropdown() {
 		console.log('toggle');
@@ -30,7 +30,7 @@
 		</ul>
 
 		<div class="demos-small">
-			<button class="dropdown-button" on:click={toggleDropdown}>demos ▼</button>
+			<button class="dropdown-button" onclick={toggleDropdown}>demos ▼</button>
 			<div class="dropdown-content" class:show={showDropdown}>
 				{#each demos as item}
 					<a href="{base}/demos/{item.slug}">{item.title}</a>

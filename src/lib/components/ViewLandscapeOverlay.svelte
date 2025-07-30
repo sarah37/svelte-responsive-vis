@@ -1,5 +1,5 @@
 <script>
-	export let viewLandscape;
+	let { viewLandscape } = $props();
 </script>
 
 <div
@@ -8,7 +8,7 @@
 		.size[1]}px; background-image: url({viewLandscape.mode == 'static'
 		? viewLandscape.imgSrc
 		: viewLandscape.dataURL})"
-/>
+></div>
 
 <style>
 	#landscape-overlay {

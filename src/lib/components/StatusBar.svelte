@@ -1,15 +1,8 @@
 <script>
-	export let width, height;
-	export let landscapeOverlay;
-	export let viewLandscape;
+	let { width, height, landscapeOverlay = $bindable(), viewLandscape, children } = $props();
 
-	$: width;
-	$: height;
-
-	let divAR, divArea;
-
-	$: divAR = Math.round((width / height) * 100) / 100;
-	$: divArea = Math.round(width * height);
+	let divAR = $derived(Math.round((width / height) * 100) / 100),
+		divArea = $derived(Math.round(width * height));
 </script>
 
 <p>
@@ -32,12 +25,12 @@
 	/><label for="show-landscape-overlay">Show view landscape overlay</label>
 	<button
 		id="export-landscape"
-		on:click={window.open(
+		onclick={window.open(
 			viewLandscape.mode == 'static' ? viewLandscape.imgSrc : viewLandscape.dataURL
 		)}>Download as PNG</button
 	>
 </p>
-<p class="marginLeft customRVOptions"><slot /></p>
+<p class="marginLeft customRVOptions">{@render children?.()}</p>
 
 <style>
 	p {
