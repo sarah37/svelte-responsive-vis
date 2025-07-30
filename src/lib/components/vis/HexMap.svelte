@@ -7,8 +7,8 @@
 	import { renderHexJSON } from 'd3-hexjson';
 
 	import { fitRect } from '$lib/helpers.js';
-	import FillLegend from '$lib/components/FillLegend.svelte';
-	import Tooltip from '$lib/components/Tooltip.svelte';
+	import FillLegend from '$lib/components/vis/FillLegend.svelte';
+	import Tooltip from '$lib/components/vis/Tooltip.svelte';
 
 	$: height = context.height;
 	$: width = context.width;

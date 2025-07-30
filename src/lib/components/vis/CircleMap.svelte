@@ -16,8 +16,8 @@
 		forceCollide
 	} from 'd3';
 
-	import Tooltip from '$lib/components/Tooltip.svelte';
-	import CircleLegend from '$lib/components/CircleLegend.svelte';
+	import Tooltip from '$lib/components/vis/Tooltip.svelte';
+	import CircleLegend from '$lib/components/vis/CircleLegend.svelte';
 
 	let map, circles;
 
@@ -69,7 +69,7 @@
 
 	// Tooltip
 	let x, y, content;
-	$: x, y, content;
+	$: (x, y, content);
 	function handleMouseover(event, feature) {
 		x = params.dorling ? feature.properties.dorlingX : projection(feature.properties.centroid)[0];
 		y = params.dorling ? feature.properties.dorlingY : projection(feature.properties.centroid)[1];

@@ -7,8 +7,8 @@
 	import * as topojson from 'topojson-client';
 
 	import { fitRect, getAreaSize } from '$lib/helpers.js';
-	import FillLegend from '$lib/components/FillLegend.svelte';
-	import Tooltip from '$lib/components/Tooltip.svelte';
+	import FillLegend from '$lib/components/vis/FillLegend.svelte';
+	import Tooltip from '$lib/components/vis/Tooltip.svelte';
 
 	$: height = context.height;
 	$: width = context.width;

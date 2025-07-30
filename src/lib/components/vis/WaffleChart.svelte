@@ -3,7 +3,7 @@
 	export let context, display; // provided by responsive vis component
 	export let checkConditions; // exported for use in responsive vis component
 
-	import Tooltip from '$lib/components/Tooltip.svelte';
+	import Tooltip from '$lib/components/vis/Tooltip.svelte';
 
 	$: height = context.height;
 	$: width = context.width;
