@@ -1,57 +1,43 @@
-<script context="module">
-	// this generates a unique id if this Svelte component is used multiple times on the same page
-	// id's will not be reused and keep going up if components are mounted/destroyed repeatedly
-	let i = 0;
-	const id = function () {
-		let name = 'vegalite-div-' + i;
-		i += 1;
-		return name;
-	};
-</script>
-
 <script>
-	export let data, params, conditions; // provided by responsive vis component from spec
-	export let context, display; // provided by responsive vis component
-	export let checkConditions; // exported for use in responsive vis component
-
 	import { scaleLinear } from 'd3';
 	import { dist } from '$lib/helpers.js';
 
-	import { onMount } from 'svelte';
-
 	import embed from 'vega-embed';
 
+	let { data, params, conditions, context, display, checkConditions = $bindable() } = $props();
+
 	// unique div id
-	const div = id();
+	const uid = $props.id();
+	const div = `vegalite-div-${uid}`;
 
 	// size of container
-	$: height = context.height;
-	$: width = context.width;
+	let height = $derived(context.height);
+	let width = $derived(context.width);
 
-	let options = { renderer: 'canvas', actions: false };
+	$effect(() => {
+		// container sizing in vega listens to the window resize event,
+		// so we manually trigger this event here when the container size changes
+		(height, width);
+		window.dispatchEvent(new Event('resize'));
+	});
 
-	$: spec = {
+	const options = { renderer: 'canvas', actions: false };
+
+	let spec = $derived({
 		...params.spec,
 		width: 'container',
 		height: 'container',
-		// autosize: 'fit',
 		...(typeof params.filter === 'function' && {
 			transform: [{ filter: params.filter(width, height) }]
 		})
-	};
-
-	let mounted = false;
-	onMount(() => {
-		mounted = true;
 	});
 
-	$: if (mounted) {
-		embed('#' + div, spec, options).catch((error) => console.log(error));
-	}
+	$effect(() => {
+		embed('#' + div, spec, options).catch(console.error);
+	});
 
 	// CONDITIONS
 	// compute overplotting
-	// if (conditions.maxOverplotting) {
 	const ratings = data.default
 		.map((d) => {
 			return [d['Rotten Tomatoes Rating'], d['IMDB Rating']];
