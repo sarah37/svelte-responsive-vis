@@ -1,78 +1,55 @@
-<script context="module">
-	// netpanorama needs a div id to render the network vis into
-	// this generates a unique id if this Svelte component is used multiple times on the same page
-	// id's will not be reused and keep going up if components are mounted/destroyed repeatedly
-	let i = 0;
-	const id = function () {
-		let name = 'netpanorama-div-' + i;
-		i += 1;
-		return name;
-	};
-</script>
-
 <script>
-	// export let data
-	export let params, conditions; // provided by responsive vis component from spec
-	export let context, display; // provided by responsive vis component
-	export let checkConditions; // exported for use in responsive vis component
-
-	import { onMount, tick } from 'svelte';
 	import { base } from '$app/paths';
 	import { waitFor } from '$lib/helpers.js';
 
-	$: height = context.height;
-	$: width = context.width;
-	$: display;
-
-	$: spec = params.spec;
-	$: spec.x = spec.x ? spec.x : 0;
-	$: spec.y = spec.y ? spec.y : 0;
+	let { params, conditions, context, display, checkConditions = $bindable() } = $props();
 
 	// suppress console logs (the library logs a lot)
 	// console.log = function () {};
 
 	// get unique id for div
-	const div = id();
+	const uid = $props.id();
+	const div = `netpanorama-div-${uid}`;
 
-	// hacky way to make the sizing work
-	let svg, g;
-	$: svg && (svg.style['max-width'] = null);
-	$: svg && (svg.style['max-height'] = null);
-	$: g &&
-		g.setAttribute(
-			'transform',
-			'translate(0,0) scale(' +
-				Math.min(height / (spec.height + spec.y), width / (spec.width + spec.x)) +
-				')'
-		);
+	let height = $derived(context.height);
+	let width = $derived(context.width);
 
-	let mounted = false;
-	onMount(() => {
-		mounted = true;
+	let spec = $derived.by(() => {
+		const spec = params.spec;
+		spec.x = spec.x ? spec.x : 0;
+		spec.y = spec.y ? spec.y : 0;
+		return spec;
 	});
-	$: if (mounted) {
+
+	let svg = $state(); // will be assigned once defined below
+	let g = $state();
+
+	$effect(() => {
+		// render spec
 		NetPanoramaTemplateViewer.render(spec, {}, div);
-
-		scaleVis(spec);
-	}
-	// let viewer;
-
-	async function scaleVis(spec) {
-		// viewer = await NetPanoramaTemplateViewer.render(spec, {}, div);
-		// console.log(viewer);
-		// window.viewer = viewer;
-
-		// hacky way to make the sizing work
-		await tick(); // wait for it to render the update
+		// wait for svg and g to be ready and assign
 		waitFor((_) => document.querySelector('#' + div + ' svg.marks')).then((_) => {
 			svg = document.querySelector('#' + div + ' svg.marks');
 			g = document.querySelector('#' + div + ' svg.marks > g');
 		});
-	}
+	});
+
+	$effect(() => {
+		if (svg && g) {
+			svg.style['max-width'] = null;
+			svg.style['max-height'] = null;
+			g.setAttribute(
+				'transform',
+				'translate(0,0) scale(' +
+					Math.min(height / (spec.height + spec.y), width / (spec.width + spec.x)) +
+					')'
+			);
+		}
+	});
 
 	// conditions -- only based on spec, does not require anything to be rendered
-	$: labelHeight = spec && spec.height - spec.y;
-	$: nNodes = spec.data[0].values.length;
+	let labelHeight = $derived(spec && spec.height - spec.y);
+	let nNodes = $derived(spec.data[0].values.length);
 
 	checkConditions = function (w, h) {
 		let s = Math.min(h / (spec.height + spec.y), w / (spec.width + spec.x));
