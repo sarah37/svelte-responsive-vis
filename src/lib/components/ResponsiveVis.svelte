@@ -2,6 +2,8 @@
 	import { range, schemeSet3 } from 'd3';
 	import { onMount, tick } from 'svelte';
 
+	import Worker from './worker_view_landscape.js?worker';
+
 	let {
 		views, // list of views - must be provided and contains data, parameters, constraint config for each view
 		initSize = { w: 600, h: 400 },
@@ -33,6 +35,13 @@
 		console.log('...updating view landscape');
 		const startTime = performance.now();
 
+		let result = $state();
+		const worker = new Worker();
+
+		worker.onmessage = (event) => {
+			viewLandscape = event.data;
+		};
+
 		// make sure constraints + views are all done updating before recalculating
 		await tick();
 
@@ -41,8 +50,9 @@
 		const w_interval = Math.floor(w / vlInterval);
 		const h_interval = Math.floor(w / vlInterval);
 
-		// get an array of max width by max height that records which view is displayed at each size
+		// array of max width by max height that records which view is displayed at each size
 		let arr = new Array(w_interval);
+
 		for (let x = 0; x < arr.length; ++x) {
 			arr[x] = new Array(h_interval);
 			for (let y = 0; y < arr.length; ++y) {
@@ -55,25 +65,15 @@
 			}
 		}
 
-		// draw this array on a canvas
-		let canvas = new OffscreenCanvas(w, h);
-		let c = canvas.getContext('2d', { alpha: false });
-
-		for (let x = 0; x < arr.length; x++) {
-			for (let y = 0; y < arr[0].length; y++) {
-				c.fillStyle = typeof arr[x][y] == 'number' ? vlColors[arr[x][y]] : '#fff';
-				c.fillRect(x * vlInterval, y * vlInterval, vlInterval, vlInterval);
-			}
-		}
-
-		let blob = await canvas.convertToBlob();
-
-		viewLandscape = {
+		let vl_obj = {
 			mode: 'dynamic',
 			dataArray: arr,
-			blob,
-			size: [w, h]
+			size: [w, h],
+			interval: vlInterval,
+			colors: vlColors
 		};
+
+		worker.postMessage(vl_obj);
 
 		const endTime = performance.now();
 		console.log(`Computed view landscape in ${endTime - startTime} milliseconds`);
