@@ -31,23 +31,29 @@
 
 	async function updateViewLandscape(views) {
 		console.log('...updating view landscape');
+		const startTime = performance.now();
 
 		// make sure constraints + views are all done updating before recalculating
 		await tick();
 
-		let w = maxSize.w;
-		let h = maxSize.h;
+		const w = maxSize.w;
+		const h = maxSize.h;
+		const w_interval = Math.floor(w / vlInterval);
+		const h_interval = Math.floor(w / vlInterval);
 
 		// get an array of max width by max height that records which view is displayed at each size
-		let arr = range(0, w, vlInterval).map((x) => {
-			return range(0, h, vlInterval).map((y) => {
+		let arr = new Array(w_interval);
+		for (let x = 0; x < arr.length; ++x) {
+			arr[x] = new Array(h_interval);
+			for (let y = 0; y < arr.length; ++y) {
 				for (let i = 0; i < views.length; i++) {
 					if (checkConditions[i](x, y)) {
-						return i;
+						arr[x][y] = i;
+						break;
 					}
 				}
-			});
-		});
+			}
+		}
 
 		// draw this array on a canvas
 		let canvas = new OffscreenCanvas(w, h);
@@ -68,6 +74,9 @@
 			blob,
 			size: [w, h]
 		};
+
+		const endTime = performance.now();
+		console.log(`Computed view landscape in ${endTime - startTime} milliseconds`);
 	}
 
 	// check if mounted + and if view landscape should be computed manually
