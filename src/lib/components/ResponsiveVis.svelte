@@ -50,11 +50,9 @@
 		});
 
 		// draw this array on a canvas
-		let canvas = document.createElement('canvas');
-		canvas.setAttribute('width', w);
-		canvas.setAttribute('height', h);
-
+		let canvas = new OffscreenCanvas(w, h);
 		let c = canvas.getContext('2d', { alpha: false });
+
 		for (let x = 0; x < arr.length; x++) {
 			for (let y = 0; y < arr[0].length; y++) {
 				c.fillStyle = typeof arr[x][y] == 'number' ? vlColors[arr[x][y]] : '#fff';
@@ -62,9 +60,14 @@
 			}
 		}
 
-		let dataURL = canvas.toDataURL();
+		let blob = await canvas.convertToBlob();
 
-		viewLandscape = { mode: 'dynamic', dataArray: arr, dataURL, size: [w, h] };
+		viewLandscape = {
+			mode: 'dynamic',
+			dataArray: arr,
+			blob,
+			size: [w, h]
+		};
 	}
 
 	// check if mounted + and if view landscape should be computed manually
