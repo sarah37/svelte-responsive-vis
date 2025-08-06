@@ -1,6 +1,8 @@
 <script>
 	let { width, height, landscapeOverlay = $bindable(), viewLandscape, children } = $props();
 
+	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+
 	let divAR = $derived(Math.round((width / height) * 100) / 100),
 		divArea = $derived(Math.round(width * height));
 </script>
@@ -19,18 +21,24 @@
 </p>
 <hr />
 <p>
-	<span class="left"><strong>Options</strong></span><input
-		type="checkbox"
-		id="show-landscape-overlay"
-		bind:checked={landscapeOverlay}
-	/><label for="show-landscape-overlay">Show view landscape overlay</label>
-	<button
-		id="export-landscape"
-		onclick={window.open(
-			viewLandscape.mode == 'static' ? viewLandscape.imgSrc : viewLandscape.dataURL
-		)}>Download as PNG</button
-	>
+	<span class="left"><strong>Options</strong></span>
+
+	{#if viewLandscape && viewLandscape.status === 'failed'}
+		❌ Loading view landscape failed (reload page to retry)
+	{:else if viewLandscape && viewLandscape.status === 'complete'}
+		<input type="checkbox" id="show-landscape-overlay" bind:checked={landscapeOverlay} />
+		<label for="show-landscape-overlay">Show view landscape overlay</label>
+		<button
+			id="export-landscape"
+			onclick={window.open(
+				viewLandscape.mode == 'static' ? viewLandscape.imgSrc : viewLandscape.dataURL
+			)}>Download as PNG</button
+		>
+	{:else}
+		<LoadingSpinner size={14} /> Computing view landscape...
+	{/if}
 </p>
+
 <p class="marginLeft customRVOptions">{@render children?.()}</p>
 
 <style>

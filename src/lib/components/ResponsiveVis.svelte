@@ -24,10 +24,10 @@
 	const viewIDs = range(views.length); // list of view ids
 	let checkConditions = $state(Array(views.length).fill(() => true)); // this gets replaced with the actual checkConditions functions below
 	let display = $derived.by(() => {
-		const startTime = performance.now();
+		// const startTime = performance.now();
 		let result = viewIDs.find((i) => checkConditions[i](width, height));
-		const endTime = performance.now();
-		console.log(`Checked conditions in ${endTime - startTime} ms`);
+		// const endTime = performance.now();
+		// console.log(`Checked conditions in ${endTime - startTime} ms`);
 		return result;
 	});
 

@@ -25,8 +25,16 @@ self.onmessage = (event) => {
 		}
 	}
 
-	canvas.convertToBlob().then((blob) => {
-		data.blob = blob;
-		self.postMessage(data);
-	});
+	canvas
+		.convertToBlob()
+		.then((blob) => {
+			data.blob = blob;
+			data.status = 'complete';
+		})
+		.catch(() => {
+			data.status = 'failed';
+		})
+		.finally(() => {
+			self.postMessage(data);
+		});
 };

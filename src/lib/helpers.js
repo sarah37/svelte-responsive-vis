@@ -45,4 +45,4 @@ const waitFor = function (conditionFunction) {
 	return new Promise(poll);
 };
 
-export { fitRect, getAreaSize, dist, waitFor };
+export { fitRect, getAreaSize, waitFor };

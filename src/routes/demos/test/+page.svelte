@@ -48,7 +48,7 @@
 	bind:height
 	bind:viewLandscape
 >
-	{#if viewLandscape && landscapeOverlay}
+	{#if landscapeOverlay}
 		<ViewLandscapeOverlay {viewLandscape} />
 	{/if}
 </ResponsiveVis>

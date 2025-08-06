@@ -353,7 +353,7 @@
 </StatusBar>
 
 <ResponsiveVis {views} maxSize={{ w: 1000, h: 1000 }} bind:width bind:height bind:viewLandscape>
-	{#if viewLandscape && landscapeOverlay}
+	{#if landscapeOverlay}
 		<ViewLandscapeOverlay {viewLandscape} />
 	{/if}
 </ResponsiveVis>
