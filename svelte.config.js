@@ -6,6 +6,9 @@ const dev = process.argv.includes('dev');
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
+	compilerOptions: {
+		runes: true
+	},
 	kit: {
 		adapter: adapter(),
 		paths: {

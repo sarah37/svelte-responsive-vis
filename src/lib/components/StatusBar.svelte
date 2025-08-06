@@ -30,10 +30,10 @@
 		<label for="show-landscape-overlay">Show view landscape overlay</label>
 		<button
 			id="export-landscape"
-			onclick={window.open(
-				viewLandscape.mode == 'static' ? viewLandscape.imgSrc : viewLandscape.dataURL
-			)}>Download as PNG</button
+			onclick={() => window.open(URL.createObjectURL(viewLandscape.blob))}
 		>
+			Download as PNG
+		</button>
 	{:else}
 		<LoadingSpinner size={14} /> Computing view landscape...
 	{/if}
