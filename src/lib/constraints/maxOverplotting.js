@@ -6,7 +6,7 @@ function dist(a, b) {
 	return Math.sqrt(dx * dx + dy * dy);
 }
 
-export default function maxOverplotting(pos, r, w, h) {
+export default function maxOverplotting(max, pos, r, w, h) {
 	if (!r | !w | !h | !pos.length) {
 		console.log(
 			`skipping condition check -- something not (yet) defined: r: ${r} w: ${w} h: ${h} pos.length: ${pos.length} `
@@ -82,5 +82,5 @@ export default function maxOverplotting(pos, r, w, h) {
 			}
 		}
 	}
-	return overplotting / normalization_factor;
+	return overplotting / normalization_factor < max;
 }

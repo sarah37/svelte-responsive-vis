@@ -55,7 +55,7 @@
 	checkConditions = function (w, h) {
 		let c = [
 			conditions.maxOverplotting
-				? maxOverplotting(ratings, radius, w, h) < conditions.maxOverplotting
+				? maxOverplotting(conditions.maxOverplotting, ratings, radius, w, h)
 				: true,
 			conditions.minWidth ? w > conditions.minWidth : true,
 			conditions.minAspectRatio ? w / h > conditions.minAspectRatio : true

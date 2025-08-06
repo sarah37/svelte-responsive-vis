@@ -1,7 +1,6 @@
 self.onmessage = (event) => {
 	const data = event.data;
 	//  {
-	// 	    mode: 'dynamic',
 	// 	    dataArray: arr,
 	// 	    size: [w, h],
 	//		interval: vlInterval,

@@ -72,7 +72,6 @@
 		}
 
 		let vl_obj = {
-			mode: 'dynamic',
 			dataArray: arr,
 			size: [w, h],
 			interval: vlInterval,
