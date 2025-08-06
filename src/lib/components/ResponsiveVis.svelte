@@ -23,7 +23,13 @@
 	// set up view switching / constraint checking
 	const viewIDs = range(views.length); // list of view ids
 	let checkConditions = $state(Array(views.length).fill(() => true)); // this gets replaced with the actual checkConditions functions below
-	let display = $derived(viewIDs.find((i) => checkConditions[i](width, height)));
+	let display = $derived.by(() => {
+		const startTime = performance.now();
+		let result = viewIDs.find((i) => checkConditions[i](width, height));
+		const endTime = performance.now();
+		console.log(`Checked conditions in ${endTime - startTime} ms`);
+		return result;
+	});
 
 	// check if mounted (required for view landscape function)
 	let mounted = $state(false);
@@ -53,11 +59,11 @@
 		// array of max width by max height that records which view is displayed at each size
 		let arr = new Array(w_interval);
 
-		for (let x = 0; x < arr.length; ++x) {
+		for (let x = 0; x < arr.length; x++) {
 			arr[x] = new Array(h_interval);
-			for (let y = 0; y < arr.length; ++y) {
+			for (let y = 0; y < arr.length; y++) {
 				for (let i = 0; i < views.length; i++) {
-					if (checkConditions[i](x, y)) {
+					if (checkConditions[i](x * vlInterval + 1, y * vlInterval + 1)) {
 						arr[x][y] = i;
 						break;
 					}

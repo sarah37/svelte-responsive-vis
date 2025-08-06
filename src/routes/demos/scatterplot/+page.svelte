@@ -62,7 +62,7 @@
 			data,
 			params: { spec: vl_spec_scatterplot },
 			conditions: {
-				maxOverplotting: 0.009
+				maxOverplotting: 0.0012
 			}
 		},
 		{
@@ -73,12 +73,8 @@
 		}
 	];
 
-	let viewLandscape = $state({
-		mode: 'static',
-		imgSrc: `${base}/img/scatterplot_view_landscape.png`,
-		size: [1000, 800]
-	});
-	let landscapeOverlay = $state();
+	let viewLandscape = $state();
+	let landscapeOverlay = $state(false);
 </script>
 
 <svelte:head>
@@ -92,12 +88,13 @@
 	minSize={{ w: 200, h: 200 }}
 	maxSize={{ w: 1000, h: 800 }}
 	initSize={{ w: 800, h: 600 }}
-	computeViewLandscape={false}
+	computeViewLandscape={true}
+	vlInterval="5"
 	bind:width
 	bind:height
 	bind:viewLandscape
 >
-	{#if landscapeOverlay}
+	{#if viewLandscape && landscapeOverlay}
 		<ViewLandscapeOverlay {viewLandscape} />
 	{/if}
 </ResponsiveVis>
