@@ -4,6 +4,7 @@
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
 
 	import TestVis from '$lib/components/vis/TestVis.svelte';
+	import { minHeight, minWidth } from '$lib/constraints/simple.js';
 
 	let width = $state(),
 		height = $state();
@@ -13,19 +14,19 @@
 			type: TestVis,
 			data: [],
 			params: { color: '#000' },
-			conditions: { minWidth: 600 }
+			conditions: [minWidth(600)]
 		},
 		{
 			type: TestVis,
 			data: [],
 			params: { color: '#f00' },
-			conditions: { minHeight: 350 }
+			conditions: [minHeight(350)]
 		},
 		{
 			type: TestVis,
 			data: [],
 			params: { color: '#00f' },
-			conditions: {}
+			conditions: []
 		}
 	];
 

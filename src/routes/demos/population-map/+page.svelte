@@ -4,12 +4,15 @@
 	import * as data from '$lib/data/world-population/world_with_continent.json';
 	import * as data_americas from '$lib/data/world-population/subset_americas.json';
 
-	import CircleMap from '$lib/components/vis/CircleMap.svelte';
-	import VegaLiteWrapper from '$lib/components/vis/VegaLiteWrapper.svelte';
-
 	import StatusBar from '$lib/components/StatusBar.svelte';
 	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
+
+	import CircleMap from '$lib/components/vis/CircleMap.svelte';
+	import VegaLiteWrapper from '$lib/components/vis/VegaLiteWrapper.svelte';
+
+	import { minAspectRatio } from '$lib/constraints/simple';
+	import { maxAspectRatioDiff, minCircleRadius } from '$lib/constraints/circleMapConditions';
 
 	let width = $state(),
 		height = $state();
@@ -20,8 +23,8 @@
 			data: data,
 			barData: getBarData(data),
 			projection: geoEqualEarth().rotate([-20, 0, 0]),
-			maxCircle: 36,
-			maxCircleDorling: 42
+			maxCircle: 64,
+			maxCircleDorling: 74
 		},
 		// europe: {
 		// 	label: 'Europe',
@@ -35,12 +38,15 @@
 			data: data_americas,
 			barData: getBarData(data_americas),
 			projection: geoEqualEarth().rotate([90, 0]),
-			maxCircle: 42,
-			maxCircleDorling: 70
+			maxCircle: 74,
+			maxCircleDorling: 124
 		}
 	};
 	const datasetsKeys = Object.keys(datasets);
 	let selectedDataset = $state('world');
+
+	// checkbox to toggle aspect ratio conditions
+	let arConditions = $state(false);
 
 	// colors for circles/bars colored by continent
 	const continents = {
@@ -59,22 +65,11 @@
 		world: schemeTableau10,
 		americas: [schemeTableau10[0], schemeTableau10[3]]
 	};
-
 	let circleColor = $derived((d) =>
 		scaleOrdinal().domain(continents[selectedDataset]).range(continent_colors[selectedDataset])(
 			d.properties.continent
 		)
 	);
-
-	// configure circle legend
-	const legend = {
-		1000000: '1 million',
-		100000000: '100 million',
-		500000000: '500 million',
-		1000000000: '1 billion'
-	};
-	const legendTickFormat = (d) => legend[d];
-	const legendTickValues = Object.keys(legend);
 
 	// prep data for bar chart
 	function getBarData(geojson) {
@@ -94,7 +89,7 @@
 		};
 	}
 
-	// abbreviate some long country names to limit the space required for axes
+	// bar chart - abbreviate some long country names to limit the space required for axes
 	function replace(adm) {
 		switch (adm) {
 			case 'United States of America':
@@ -170,8 +165,6 @@
 		}
 	});
 
-	let arConditions = $state(false);
-
 	let views = $derived([
 		{
 			type: CircleMap, // configured as proportional circle map
@@ -180,14 +173,23 @@
 				projection: datasets[selectedDataset].projection,
 				bounds: datasets[selectedDataset].bounds,
 				circleColor: circleColor,
-				legendTickValues: legendTickValues,
-				legendTickFormat: legendTickFormat,
 				maxCircle: datasets[selectedDataset].maxCircle
 			},
-			conditions: {
-				minCircleRadius: 1,
-				maxAspectRatioDiff: arConditions ? 1.5 : false
-			}
+			conditions: [
+				minCircleRadius(
+					1,
+					datasets[selectedDataset].maxCircle,
+					datasets[selectedDataset].projection,
+					datasets[selectedDataset].data
+				),
+				arConditions
+					? maxAspectRatioDiff(
+							1.5,
+							datasets[selectedDataset].projection,
+							datasets[selectedDataset].data
+						)
+					: () => true
+			]
 		},
 		{
 			type: CircleMap, // configured as Dorling
@@ -196,14 +198,23 @@
 				dorling: true,
 				projection: datasets[selectedDataset].projection,
 				circleColor: circleColor,
-				legendTickValues: legendTickValues,
-				legendTickFormat: legendTickFormat,
 				maxCircle: datasets[selectedDataset].maxCircleDorling
 			},
-			conditions: {
-				minCircleRadius: 1,
-				maxAspectRatioDiff: arConditions ? 1.5 : false
-			}
+			conditions: [
+				minCircleRadius(
+					1,
+					datasets[selectedDataset].maxCircleDorling,
+					datasets[selectedDataset].projection,
+					datasets[selectedDataset].data
+				),
+				arConditions
+					? maxAspectRatioDiff(
+							1.5,
+							datasets[selectedDataset].projection,
+							datasets[selectedDataset].data
+						)
+					: () => true
+			]
 		},
 		{
 			type: VegaLiteWrapper,
@@ -214,9 +225,7 @@
 					return `datum.i < ${(w - 20) / 20}`;
 				}
 			},
-			conditions: {
-				minAspectRatio: 1 // landscape format
-			}
+			conditions: [minAspectRatio(1)] // landscape format
 		},
 		{
 			type: VegaLiteWrapper,
@@ -227,7 +236,7 @@
 					return `datum.i < ${(h - 20) / 20}`;
 				}
 			},
-			conditions: {}
+			conditions: []
 		}
 	]);
 
@@ -239,7 +248,6 @@
 	<title>Constraint-Based Breakpoints | Population Map</title>
 </svelte:head>
 
-<!-- <slot /> -->
 <StatusBar {width} {height} bind:landscapeOverlay bind:viewLandscape>
 	Select dataset:
 	<select bind:value={selectedDataset}>

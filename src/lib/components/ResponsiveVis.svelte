@@ -22,10 +22,18 @@
 
 	// set up view switching / constraint checking
 	const viewIDs = range(views.length); // list of view ids
-	let checkConditions = $state(Array(views.length).fill(() => true)); // this gets replaced with the actual checkConditions functions below
+	let conditions = $derived(views.map((view) => view.conditions));
+
+	function checkConditions(conditionList, w, h) {
+		const conditionResults = conditionList.map((c) => c(w, h));
+		return conditionResults.every(Boolean);
+	}
+
 	let display = $derived.by(() => {
 		// const startTime = performance.now();
-		let result = viewIDs.find((i) => checkConditions[i](width, height));
+		let result = viewIDs.find((i) => {
+			return checkConditions(conditions[i], width, height);
+		});
 		// const endTime = performance.now();
 		// console.log(`Checked conditions in ${endTime - startTime} ms`);
 		return result;
@@ -63,7 +71,7 @@
 			arr[x] = new Array(h_interval);
 			for (let y = 0; y < arr.length; y++) {
 				for (let i = 0; i < views.length; i++) {
-					if (checkConditions[i](x * vlInterval + 1, y * vlInterval + 1)) {
+					if (checkConditions(conditions[i], x * vlInterval + 1, y * vlInterval + 1)) {
 						arr[x][y] = i;
 						break;
 					}
@@ -111,7 +119,6 @@
 					views
 				}}
 				display={display === i}
-				bind:checkConditions={checkConditions[i]}
 			/>
 		{/each}
 	</div>

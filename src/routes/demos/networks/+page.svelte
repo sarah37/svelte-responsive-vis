@@ -8,6 +8,10 @@
 	import * as nodes from '$lib/data/les-mis/les-mis-nodes.json';
 
 	import NetPanorama from '$lib/components/vis/NetPanorama.svelte';
+	import {
+		minAdjacencyMatrixLabelSize,
+		minArcDiagramLabelSize
+	} from '$lib/constraints/netPanoramaConditions';
 
 	let width = $state(),
 		height = $state();
@@ -315,21 +319,21 @@
 		{
 			type: NetPanorama,
 			data: null, // data is included in spec
-			params: { data: selectedDataset, spec: spec_adjacency_matrix },
-			conditions: { minAdjacencyMatrixLabelSize: 6 }
+			params: { spec: spec_adjacency_matrix },
+			conditions: [minAdjacencyMatrixLabelSize(6, spec_adjacency_matrix)]
 		},
 
 		{
 			type: NetPanorama,
 			data: null, // data is included in spec
-			params: { data: selectedDataset, spec: spec_arcdiagram },
-			conditions: { minArcDiagramLabelSize: 6 }
+			params: { spec: spec_arcdiagram },
+			conditions: [minArcDiagramLabelSize(6, spec_arcdiagram)]
 		},
 		{
 			type: NetPanorama,
 			data: null, // data is included in spec
-			params: { data: selectedDataset, spec: spec_nodelink },
-			conditions: {}
+			params: { spec: spec_nodelink },
+			conditions: []
 		}
 	]);
 

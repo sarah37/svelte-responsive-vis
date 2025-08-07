@@ -14,15 +14,10 @@
 	let height = $derived(context.height);
 	let width = $derived(context.width);
 
-	let spec = $derived.by(() => {
-		const spec = params.spec;
-		spec.x = spec.x ? spec.x : 0;
-		spec.y = spec.y ? spec.y : 0;
-		return spec;
-	});
-
 	let svg = $state(); // will be assigned once defined below
 	let g = $state();
+
+	const spec = params.spec;
 
 	$effect(() => {
 		// render spec
@@ -35,36 +30,20 @@
 	});
 
 	$effect(() => {
-		if (svg && g) {
+		if (svg && g && spec) {
 			svg.style['max-width'] = null;
 			svg.style['max-height'] = null;
 			g.setAttribute(
 				'transform',
 				'translate(0,0) scale(' +
-					Math.min(height / (spec.height + spec.y), width / (spec.width + spec.x)) +
+					Math.min(
+						height / (spec.height + (spec.y ? spec.y : 0)),
+						width / (spec.width + (spec.x ? spec.x : 0))
+					) +
 					')'
 			);
 		}
 	});
-
-	// conditions -- only based on spec, does not require anything to be rendered
-	let labelHeight = $derived(spec && spec.height - spec.y);
-	let nNodes = $derived(spec.data[0].values.length);
-
-	checkConditions = function (w, h) {
-		let s = Math.min(h / (spec.height + spec.y), w / (spec.width + spec.x));
-		let c = [
-			conditions.minWidth ? w > conditions.minWidth : true,
-			conditions.minAspectRatio ? w / h > conditions.minAspectRatio : true,
-			conditions.minAdjacencyMatrixLabelSize
-				? s * (labelHeight / nNodes) > conditions.minAdjacencyMatrixLabelSize
-				: true,
-			conditions.minArcDiagramLabelSize
-				? s * (spec.height / nNodes) > conditions.minArcDiagramLabelSize
-				: true
-		];
-		return c.every(Boolean);
-	};
 </script>
 
 <svelte:head>
