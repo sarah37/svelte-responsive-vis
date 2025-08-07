@@ -2,7 +2,7 @@
 	import { base } from '$app/paths';
 	import { waitFor } from '$lib/helpers.js';
 
-	let { params, conditions, context, display, checkConditions = $bindable() } = $props();
+	let { params, conditions, context, display } = $props();
 
 	// suppress console logs (the library logs a lot)
 	// console.log = function () {};
