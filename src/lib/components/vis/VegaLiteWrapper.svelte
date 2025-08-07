@@ -3,7 +3,7 @@
 
 	import maxOverplotting from '$lib/constraints/maxOverplotting';
 
-	let { data, params, conditions, context, display, checkConditions = $bindable() } = $props();
+	let { data, params, conditions, context, display } = $props();
 
 	// these seem to be the same for every plot
 	const margin = {
@@ -41,27 +41,6 @@
 	$effect(() => {
 		embed('#' + div, spec, options).catch(console.error);
 	});
-
-	// CONDITIONS
-	// compute overplotting
-	const ratings = data.default
-		.map((d) => {
-			return [d['IMDB Rating'], d['Rotten Tomatoes Rating']];
-		}) // get ratings
-		.filter((d) => d[0] !== null && d[1] !== null); // filter out instances where at least one of them is null
-
-	const radius = 3.09; // default size of vega-lite circle is 30, i.e. radius of 3.09
-
-	checkConditions = function (w, h) {
-		let c = [
-			conditions.maxOverplotting
-				? maxOverplotting(conditions.maxOverplotting, ratings, radius, w, h)
-				: true,
-			conditions.minWidth ? w > conditions.minWidth : true,
-			conditions.minAspectRatio ? w / h > conditions.minAspectRatio : true
-		];
-		return c.every(Boolean);
-	};
 </script>
 
 <div

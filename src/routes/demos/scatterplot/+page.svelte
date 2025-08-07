@@ -8,6 +8,7 @@
 	import StatusBar from '$lib/components/StatusBar.svelte';
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
 	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
+	import maxOverplotting from '$lib/constraints/maxOverplotting';
 
 	let width = $state(),
 		height = $state();
@@ -56,20 +57,25 @@
 		}
 	};
 
+	const ratings = data.default
+		.map((d) => {
+			return [d['IMDB Rating'], d['Rotten Tomatoes Rating']];
+		}) // get ratings
+		.filter((d) => d[0] !== null && d[1] !== null); // filter out instances where at least one of them is null
+	const radius = 3.09; // default size of vega-lite circle is 30, i.e. radius of 3.09
+
 	const views = [
 		{
 			type: VegaLiteWrapper,
 			data,
 			params: { spec: vl_spec_scatterplot },
-			conditions: {
-				maxOverplotting: 0.0012
-			}
+			conditions: [maxOverplotting(0.0012, ratings, 3.09)]
 		},
 		{
 			type: VegaLiteWrapper,
 			data,
 			params: { spec: vl_spec_histogram_heatmap },
-			conditions: {}
+			conditions: []
 		}
 	];
 
@@ -89,7 +95,7 @@
 	maxSize={{ w: 1000, h: 800 }}
 	initSize={{ w: 800, h: 600 }}
 	computeViewLandscape={true}
-	vlInterval="5"
+	vlInterval="10"
 	bind:width
 	bind:height
 	bind:viewLandscape
