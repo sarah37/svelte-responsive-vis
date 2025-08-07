@@ -35,5 +35,6 @@ self.onmessage = (event) => {
 		})
 		.finally(() => {
 			self.postMessage(data);
+			self.close();
 		});
 };

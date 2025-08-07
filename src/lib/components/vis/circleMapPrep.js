@@ -12,7 +12,6 @@ function getMapSetup(data, projection) {
 	const bounds = path.bounds(data);
 	const mapAR = (bounds[1][0] - bounds[0][0]) / (bounds[1][1] - bounds[0][1]);
 	const mapInitSize = { width: bounds[1][0] - bounds[0][0], height: bounds[1][1] - bounds[0][1] };
-	console.log(mapInitSize);
 	return { path, bounds, mapAR, mapInitSize };
 }
 

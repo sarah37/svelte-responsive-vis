@@ -38,8 +38,8 @@
 			data: data_americas,
 			barData: getBarData(data_americas),
 			projection: geoEqualEarth().rotate([90, 0]),
-			maxCircle: 74,
-			maxCircleDorling: 124
+			maxCircle: 35,
+			maxCircleDorling: 58
 		}
 	};
 	const datasetsKeys = Object.keys(datasets);
