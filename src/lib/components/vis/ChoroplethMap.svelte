@@ -2,17 +2,17 @@
 	import * as d3 from 'd3';
 	import * as topojson from 'topojson-client';
 
-	import { fitRect, getAreaSize } from '$lib/helpers.js';
 	import FillLegend from '$lib/components/vis/FillLegend.svelte';
 	import Tooltip from '$lib/components/vis/Tooltip.svelte';
+
+	import { getMapSetup, fitRect, getAreaSize } from './d3MapHelpers';
 
 	let {
 		data,
 		params,
 		conditions, // ^ provided by responsive vis component from spec
 		context,
-		display, // ^ provided by responsive vis component
-		checkConditions = $bindable() // exported for use in responsive vis component
+		display // ^ provided by responsive vis component
 	} = $props();
 
 	let height = $derived(context.height);
@@ -20,38 +20,19 @@
 
 	const topo = data.map;
 	const results = data.results;
+	const projection = params.projection;
 
 	// prepare data: convert topojson to geojson (individual area polygons)
-	const geo = topojson.feature(topo, topo.objects.merged); //params.collection
+	const geo = topojson.feature(topo, topo.objects.merged);
 	// create mesh for drawing outlines
 	const mesh = topojson.mesh(topo);
 
-	// fit projection to container + geo data
-	const initW = 500;
-	const initH = 500;
-	const projection = params.projection;
-	projection.fitSize([initW, initH], mesh);
-	const path = d3.geoPath(projection);
-
-	// get bounds
-	const bounds = path.bounds(mesh);
-	const mapAR = (bounds[1][0] - bounds[0][0]) / (bounds[1][1] - bounds[0][1]);
-
-	const mapInitSize = { width: bounds[1][0] - bounds[0][0], height: bounds[1][1] - bounds[0][1] };
-
-	// get area sizes
-	geo.features.forEach((feature) => {
-		feature.area = getAreaSize(feature, path);
-		return feature;
-	});
-
-	// get smallest area
-	let filterFunc =
-		typeof conditions.minAreaFilter === 'function' ? conditions.minAreaFilter : (d) => true;
-	const minArea = d3.min(geo.features.filter(filterFunc), (d) => d.area);
+	// map projection + measurements
+	const { path, bounds, mapAR, mapInitSize } = getMapSetup(mesh, projection);
+	console.log(mapInitSize);
 
 	// compute scale and translate
-	let { s, t } = $derived(fitRect([mapInitSize.width, mapInitSize.height], [width, height]));
+	let { s, t } = $derived(fitRect(mapInitSize, [width, height]));
 
 	// Tooltip
 	let tx = $state(),
@@ -69,26 +50,11 @@
 		ty = -100;
 		content = '';
 	}
-	// https://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript?noredirect=1&lq=1
 	function toTitleCase(str) {
 		return str.replace(/\w\S*/g, function (txt) {
 			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 		});
 	}
-
-	checkConditions = function (w, h) {
-		// using constants: mapAR, mapInitSize, minArea
-		let ar = w / h; // aspect ratio of container
-		let s = mapAR > w / h ? w / mapInitSize.width : h / mapInitSize.height;
-		let c = [
-			conditions.minAreaSize ? minArea * Math.pow(s, 2) > conditions.minAreaSize : true,
-			conditions.maxAspectRatioDiff
-				? ar / mapAR >= 1 / conditions.maxAspectRatioDiff &&
-					ar / mapAR <= conditions.maxAspectRatioDiff
-				: true
-		];
-		return c.every(Boolean);
-	};
 </script>
 
 <!-- only display if this view state is selected -->
@@ -128,10 +94,10 @@
 				colors={params.colors}
 				labels={params.category_labels}
 				title={params.title}
-				x={mapInitSize.width + bounds[0][0] - 3}
-				y={0.15 * mapInitSize.height + bounds[0][1]}
+				x={mapInitSize[0] + bounds[0][0]}
+				y={0.15 * mapInitSize[1] + bounds[0][1]}
 				anchorX="right"
-				s="0.69"
+				s="0.25"
 			/>
 		</g>
 		<Tooltip

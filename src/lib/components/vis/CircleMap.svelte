@@ -5,7 +5,7 @@
 		getMapSetup,
 		getMapScaleTranslate,
 		getRadiusScale
-	} from '$lib/components/vis/circleMapPrep';
+	} from '$lib/components/vis/d3MapHelpers.js';
 
 	import Tooltip from '$lib/components/vis/Tooltip.svelte';
 	import CircleLegend from '$lib/components/vis/CircleLegend.svelte';
@@ -120,7 +120,7 @@
 			</g>
 			<CircleLegend
 				x={5 + bounds[0][0]}
-				y={mapInitSize.height + bounds[0][1] - 5}
+				y={mapInitSize[1] + bounds[0][1] - 5}
 				anchorX="left"
 				anchorY="bottom"
 				scale={r}

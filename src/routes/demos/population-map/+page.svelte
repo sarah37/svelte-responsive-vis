@@ -11,8 +11,8 @@
 	import CircleMap from '$lib/components/vis/CircleMap.svelte';
 	import VegaLiteWrapper from '$lib/components/vis/VegaLiteWrapper.svelte';
 
-	import { minAspectRatio } from '$lib/constraints/simple';
-	import { maxAspectRatioDiff, minCircleRadius } from '$lib/constraints/circleMapConditions';
+	import { minAspectRatio } from '$lib/constraints/simple.js';
+	import { maxAspectRatioDiff, minCircleRadius } from '$lib/constraints/d3MapConditions.js';
 
 	let width = $state(),
 		height = $state();

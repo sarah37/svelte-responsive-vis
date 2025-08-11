@@ -1,5 +1,6 @@
 <script>
-	import * as d3 from 'd3';
+	import { csvParse, geoAlbers, scaleOrdinal } from 'd3';
+	import { feature } from 'topojson-client';
 
 	import * as map from '$lib/data/uk-election/merged.json';
 	import * as hex from '$lib/data/uk-election/test.hex.json';
@@ -12,12 +13,18 @@
 	import StatusBar from '$lib/components/StatusBar.svelte';
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
 	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
+	import { maxAspectRatio } from '$lib/constraints/simple';
+	import {
+		maxAspectRatioDiff as maxAspectRatioDiffHex,
+		minHexSize
+	} from '$lib/constraints/hexMapConditions';
+	import { maxAspectRatioDiff, minAreaSize } from '$lib/constraints/d3MapConditions';
 
 	let width = $state();
 	let height = $state();
 
 	// parse csv from raw import
-	const results = d3.csvParse(resultsRaw);
+	const results = csvParse(resultsRaw);
 
 	const categories = [
 		'Con',
@@ -59,7 +66,7 @@
 		'Speaker'
 	];
 
-	let colorScale = d3.scaleOrdinal().domain(categories).range(colors);
+	let colorScale = scaleOrdinal().domain(categories).range(colors);
 
 	let arConditions = $state(false);
 
@@ -71,16 +78,18 @@
 				colors: colors,
 				category_labels: category_labels,
 				title: 'UK General Election 2019',
-				projection: d3.geoAlbers().rotate([0, 0]),
+				projection: geoAlbers().rotate([0, 0]),
 				map_id: (d) => d.properties.id,
 				data_id: (d) => d.ons_id,
 				colorScale: colorScale,
 				values: (d) => d.first_party
 			},
-			conditions: {
-				minAreaSize: 2,
-				maxAspectRatioDiff: arConditions ? 2 : false
-			}
+			conditions: [
+				minAreaSize(2, geoAlbers().rotate([0, 0]), feature(map, map.objects.merged)),
+				arConditions
+					? maxAspectRatioDiff(2, geoAlbers().rotate([0, 0]), feature(map, map.objects.merged))
+					: () => true
+			]
 		},
 		{
 			type: HexMap,
@@ -91,22 +100,19 @@
 				title: 'UK General Election 2019',
 				colorScale: colorScale
 			},
-			conditions: {
-				minHexSize: 5,
-				maxAspectRatioDiff: arConditions ? 2 : false
-			}
+			conditions: [minHexSize(5, hex), arConditions ? maxAspectRatioDiffHex(2, hex) : () => true]
 		},
 		{
 			type: WaffleChart,
 			data: { results },
 			params: { colorScale, orientation: 'vertical' },
-			conditions: { maxAspectRatio: 1 }
+			conditions: [maxAspectRatio(1)]
 		},
 		{
 			type: WaffleChart,
 			data: { results },
 			params: { colorScale, orientation: 'horizontal' },
-			conditions: {}
+			conditions: []
 		}
 	]);
 

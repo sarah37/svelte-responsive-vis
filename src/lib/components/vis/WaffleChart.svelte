@@ -1,6 +1,6 @@
 <script>
 	import Tooltip from '$lib/components/vis/Tooltip.svelte';
-	let { data, params, conditions, context, display, checkConditions = $bindable() } = $props();
+	let { data, params, conditions, context, display } = $props();
 
 	let height = $derived(context.height);
 	let width = $derived(context.width);
@@ -68,15 +68,6 @@
 		y = -100;
 		content = '';
 	}
-
-	checkConditions = function (w, h) {
-		let c = [
-			conditions.minWidth ? w > conditions.minWidth : true,
-			conditions.minAspectRatio ? w / h > conditions.minAspectRatio : true,
-			conditions.maxAspectRatio ? w / h < conditions.maxAspectRatio : true
-		];
-		return c.every(Boolean);
-	};
 </script>
 
 {#if display}
