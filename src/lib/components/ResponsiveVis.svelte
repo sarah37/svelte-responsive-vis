@@ -9,9 +9,9 @@
 		initSize = { w: 600, h: 400 },
 		maxSize = { w: 1000, h: 700 },
 		minSize = { w: 50, h: 50 },
-		computeViewLandscape = true,
 		width = $bindable(),
 		height = $bindable(),
+		computeViewLandscape = false,
 		viewLandscape = $bindable(), // ^ these are bindable to they can be used on the page (optionally)
 		vlInterval = 1, // how detailed should the view landscape be calculated
 		children
@@ -46,6 +46,13 @@
 	});
 
 	async function updateViewLandscape(views) {
+		// do not compute if not explicitly enabled
+		if (!computeViewLandscape) {
+			console.log('view landscape not enabled');
+			viewLandscape = { status: 'disabled' };
+			return;
+		}
+
 		console.log('...updating view landscape');
 		const startTime = performance.now();
 
@@ -92,10 +99,10 @@
 		console.log(`Computed view landscape in ${endTime - startTime} milliseconds`);
 	}
 
-	// check if mounted + and if view landscape should be computed manually
+	// check if mounted
 	// then recompute view landscape whenever the views are updated
 	$effect(() => {
-		if (mounted && computeViewLandscape) {
+		if (mounted) {
 			updateViewLandscape(views);
 		}
 	});

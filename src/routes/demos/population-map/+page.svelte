@@ -269,6 +269,7 @@
 	minSize={{ w: 200, h: 200 }}
 	bind:width
 	bind:height
+	computeViewLandscape={true}
 	bind:viewLandscape
 >
 	{#if landscapeOverlay}

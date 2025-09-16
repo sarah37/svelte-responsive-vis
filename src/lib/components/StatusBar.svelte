@@ -23,7 +23,9 @@
 <p>
 	<span class="left"><strong>Options</strong></span>
 
-	{#if viewLandscape && viewLandscape.status === 'failed'}
+	{#if viewLandscape && viewLandscape.status === 'disabled'}
+		❌ View landscape disabled
+	{:else if viewLandscape && viewLandscape.status === 'failed'}
 		❌ Loading view landscape failed (reload page to retry)
 	{:else if viewLandscape && viewLandscape.status === 'complete'}
 		<input type="checkbox" id="show-landscape-overlay" bind:checked={landscapeOverlay} />

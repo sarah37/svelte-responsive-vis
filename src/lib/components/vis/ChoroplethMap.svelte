@@ -29,7 +29,6 @@
 
 	// map projection + measurements
 	const { path, bounds, mapAR, mapInitSize } = getMapSetup(mesh, projection);
-	console.log(mapInitSize);
 
 	// compute scale and translate
 	let { s, t } = $derived(fitRect(mapInitSize, [width, height]));

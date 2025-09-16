@@ -356,7 +356,14 @@
 	</select> -->
 </StatusBar>
 
-<ResponsiveVis {views} maxSize={{ w: 1000, h: 1000 }} bind:width bind:height bind:viewLandscape>
+<ResponsiveVis
+	{views}
+	maxSize={{ w: 1000, h: 1000 }}
+	bind:width
+	bind:height
+	computeViewLandscape={true}
+	bind:viewLandscape
+>
 	{#if landscapeOverlay}
 		<ViewLandscapeOverlay {viewLandscape} />
 	{/if}

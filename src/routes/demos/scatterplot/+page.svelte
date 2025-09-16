@@ -94,10 +94,10 @@
 	minSize={{ w: 200, h: 200 }}
 	maxSize={{ w: 1000, h: 800 }}
 	initSize={{ w: 800, h: 600 }}
-	computeViewLandscape={true}
-	vlInterval="10"
 	bind:width
 	bind:height
+	computeViewLandscape={false}
+	vlInterval={10}
 	bind:viewLandscape
 >
 	{#if landscapeOverlay}
