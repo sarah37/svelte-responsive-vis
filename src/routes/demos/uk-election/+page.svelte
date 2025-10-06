@@ -12,7 +12,7 @@
 
 	import StatusBar from '$lib/components/StatusBar.svelte';
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
-	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
+	import ResponsiveVis from 'svelte-responsive-vis';
 	import { maxAspectRatio } from '$lib/constraints/simple';
 	import {
 		maxAspectRatioDiff as maxAspectRatioDiffHex,

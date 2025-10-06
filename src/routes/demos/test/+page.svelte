@@ -1,6 +1,6 @@
 <script>
 	import StatusBar from '$lib/components/StatusBar.svelte';
-	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
+	import ResponsiveVis from 'svelte-responsive-vis';
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
 
 	import TestVis from '$lib/components/vis/TestVis.svelte';
