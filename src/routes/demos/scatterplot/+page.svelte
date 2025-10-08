@@ -7,7 +7,7 @@
 
 	import StatusBar from '$lib/components/StatusBar.svelte';
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
-	import ResponsiveVis from 'svelte-responsive-vis';
+	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
 	import maxOverplotting from '$lib/constraints/maxOverplotting';
 
 	let width = $state(),

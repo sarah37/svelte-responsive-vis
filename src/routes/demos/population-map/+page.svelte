@@ -5,7 +5,7 @@
 	import * as data_americas from '$lib/data/world-population/subset_americas.json';
 
 	import StatusBar from '$lib/components/StatusBar.svelte';
-	import ResponsiveVis from 'svelte-responsive-vis';
+	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
 	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
 
 	import CircleMap from '$lib/components/vis/CircleMap.svelte';

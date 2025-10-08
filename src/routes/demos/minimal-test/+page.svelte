@@ -1,5 +1,5 @@
 <script>
-	import ResponsiveVis from 'svelte-responsive-vis';
+	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
 
 	import TestVis from '$lib/components/vis/TestVis.svelte';
 	import { minHeight, minWidth } from '$lib/constraints/simple.js';
