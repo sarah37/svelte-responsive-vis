@@ -12,7 +12,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		paths: {
-			base: dev ? '' : '/responsive-vis-collection'
+			base: dev ? '' : '/svelte-responsive-vis'
 		}
 	}
 };
