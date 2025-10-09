@@ -1,14 +1,10 @@
 <script>
 	import { forceSimulation, forceX, forceY, forceCollide } from 'd3';
 
-	import {
-		getMapSetup,
-		getMapScaleTranslate,
-		getRadiusScale
-	} from '$lib/components/vis/d3MapHelpers.js';
+	import { getMapSetup, getMapScaleTranslate, getRadiusScale } from '$lib/vis/d3MapHelpers.js';
 
-	import Tooltip from '$lib/components/vis/Tooltip.svelte';
-	import CircleLegend from '$lib/components/vis/CircleLegend.svelte';
+	import Tooltip from '$lib/vis/Tooltip.svelte';
+	import CircleLegend from '$lib/vis/CircleLegend.svelte';
 
 	let { data, params, conditions, context, display } = $props();
 

@@ -1,5 +1,5 @@
 <script>
-	import Tooltip from '$lib/components/vis/Tooltip.svelte';
+	import Tooltip from '$lib/vis/Tooltip.svelte';
 	let { data, params, conditions, context, display } = $props();
 
 	let height = $derived(context.height);

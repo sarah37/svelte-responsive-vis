@@ -6,13 +6,13 @@
 	import * as hex from '$lib/data/uk-election/test.hex.json';
 	import resultsRaw from '$lib/data/uk-election/HoC-GE2019-results-by-constituency-csv.csv?raw';
 
-	import ChoroplethMap from '$lib/components/vis/ChoroplethMap.svelte';
-	import HexMap from '$lib/components/vis/HexMap.svelte';
-	import WaffleChart from '$lib/components/vis/WaffleChart.svelte';
+	import ChoroplethMap from '$lib/vis/ChoroplethMap.svelte';
+	import HexMap from '$lib/vis/HexMap.svelte';
+	import WaffleChart from '$lib/vis/WaffleChart.svelte';
 
-	import StatusBar from '$lib/components/StatusBar.svelte';
-	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
-	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
+	import StatusBar from '$lib/ui/StatusBar.svelte';
+	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
+	import ResponsiveVis from '$lib/ResponsiveVis.svelte';
 	import { maxAspectRatio } from '$lib/constraints/simple';
 	import {
 		maxAspectRatioDiff as maxAspectRatioDiffHex,

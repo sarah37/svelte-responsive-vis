@@ -1,8 +1,8 @@
 <script>
-	import { fitRect } from '$lib/components/vis/d3MapHelpers.js';
-	import FillLegend from '$lib/components/vis/FillLegend.svelte';
-	import Tooltip from '$lib/components/vis/Tooltip.svelte';
-	import { createHexMap } from '$lib/components/vis/hexMapPrep.js';
+	import { fitRect } from '$lib/vis/d3MapHelpers.js';
+	import FillLegend from '$lib/vis/FillLegend.svelte';
+	import Tooltip from '$lib/vis/Tooltip.svelte';
+	import { createHexMap } from '$lib/vis/hexMapPrep.js';
 	let { data, params, conditions, context, display } = $props();
 
 	let height = $derived(context.height);

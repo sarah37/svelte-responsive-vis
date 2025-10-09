@@ -1,5 +1,5 @@
-import { createHexMap } from '$lib/components/vis/hexMapPrep';
-import { fitRect, getAspectRatioDifference } from '$lib/components/vis/d3MapHelpers.js';
+import { createHexMap } from '$lib/vis/hexMapPrep';
+import { fitRect, getAspectRatioDifference } from '$lib/vis/d3MapHelpers.js';
 
 function minHexSize(minSize, hex) {
 	const { hexInitSize, hexWidth } = createHexMap(hex);

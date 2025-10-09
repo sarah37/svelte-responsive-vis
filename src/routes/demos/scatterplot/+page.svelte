@@ -3,11 +3,11 @@
 
 	import { base } from '$app/paths';
 
-	import VegaLiteWrapper from '$lib/components/vis/VegaLiteWrapper.svelte';
+	import VegaLiteWrapper from '$lib/vis/VegaLiteWrapper.svelte';
 
-	import StatusBar from '$lib/components/StatusBar.svelte';
-	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
-	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
+	import StatusBar from '$lib/ui/StatusBar.svelte';
+	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
+	import ResponsiveVis from '$lib/ResponsiveVis.svelte';
 	import maxOverplotting from '$lib/constraints/maxOverplotting';
 
 	let width = $state(),

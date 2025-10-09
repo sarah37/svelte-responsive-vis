@@ -1,13 +1,13 @@
 <script>
-	import StatusBar from '$lib/components/StatusBar.svelte';
-	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
-	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
+	import StatusBar from '$lib/ui/StatusBar.svelte';
+	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
+	import ResponsiveVis from '$lib/ResponsiveVis.svelte';
 
 	// import { default as marieboucher } from '$lib/data/marie-boucher/marieboucher.csv';
 	import * as links from '$lib/data/les-mis/les-mis-links.json';
 	import * as nodes from '$lib/data/les-mis/les-mis-nodes.json';
 
-	import NetPanorama from '$lib/components/vis/NetPanorama.svelte';
+	import NetPanorama from '$lib/vis/NetPanorama.svelte';
 	import {
 		minAdjacencyMatrixLabelSize,
 		minArcDiagramLabelSize

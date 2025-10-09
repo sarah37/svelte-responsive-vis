@@ -1,7 +1,7 @@
 <script>
 	let { width, height, landscapeOverlay = $bindable(), viewLandscape, children } = $props();
 
-	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+	import LoadingSpinner from '$lib/ui/LoadingSpinner.svelte';
 
 	let divAR = $derived(Math.round((width / height) * 100) / 100),
 		divArea = $derived(Math.round(width * height));

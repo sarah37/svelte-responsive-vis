@@ -4,7 +4,7 @@ import {
 	getMapScaleTranslate,
 	getMapSetup,
 	getRadiusScale
-} from '$lib/components/vis/d3MapHelpers';
+} from '$lib/vis/d3MapHelpers';
 import { min } from 'd3';
 
 export function minCircleRadius(minCircleRadius, maxCircle, projection, data) {

@@ -2,8 +2,8 @@
 	import * as d3 from 'd3';
 	import * as topojson from 'topojson-client';
 
-	import FillLegend from '$lib/components/vis/FillLegend.svelte';
-	import Tooltip from '$lib/components/vis/Tooltip.svelte';
+	import FillLegend from '$lib/vis/FillLegend.svelte';
+	import Tooltip from '$lib/vis/Tooltip.svelte';
 
 	import { getMapSetup, fitRect, getAreaSize } from './d3MapHelpers';
 

@@ -1,9 +1,9 @@
 <script>
-	import StatusBar from '$lib/components/StatusBar.svelte';
-	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
-	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
+	import StatusBar from '$lib/ui/StatusBar.svelte';
+	import ResponsiveVis from '$lib/ResponsiveVis.svelte';
+	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
 
-	import TestVis from '$lib/components/vis/TestVis.svelte';
+	import TestVis from '$lib/vis/TestVis.svelte';
 	import { minHeight, minWidth } from '$lib/constraints/simple.js';
 
 	let width = $state(),

@@ -4,12 +4,12 @@
 	import * as data from '$lib/data/world-population/world_with_continent.json';
 	import * as data_americas from '$lib/data/world-population/subset_americas.json';
 
-	import StatusBar from '$lib/components/StatusBar.svelte';
-	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
-	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
+	import StatusBar from '$lib/ui/StatusBar.svelte';
+	import ResponsiveVis from '$lib/ResponsiveVis.svelte';
+	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
 
-	import CircleMap from '$lib/components/vis/CircleMap.svelte';
-	import VegaLiteWrapper from '$lib/components/vis/VegaLiteWrapper.svelte';
+	import CircleMap from '$lib/vis/CircleMap.svelte';
+	import VegaLiteWrapper from '$lib/vis/VegaLiteWrapper.svelte';
 
 	import { minAspectRatio } from '$lib/constraints/simple.js';
 	import { maxAspectRatioDiff, minCircleRadius } from '$lib/constraints/d3MapConditions.js';
