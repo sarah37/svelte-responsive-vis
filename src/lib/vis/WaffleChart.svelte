@@ -1,6 +1,6 @@
 <script>
 	import Tooltip from '$lib/vis/Tooltip.svelte';
-	let { data, params, conditions, context, display } = $props();
+	let { data, params, context, display } = $props();
 
 	let height = $derived(context.height);
 	let width = $derived(context.width);
@@ -63,7 +63,7 @@
 		y = event.layerY;
 		content = item.constituency_name;
 	}
-	function handleMouseout(event) {
+	function handleMouseout() {
 		x = -100;
 		y = -100;
 		content = '';
@@ -76,7 +76,7 @@
 
 		<g id="wafflechart">
 			<g transform="translate({margin},{margin})">
-				{#each countries as country, i}
+				{#each countries as country, i (i)}
 					<g
 						transform="translate({wide ? translate[i] + gap * i : 0},{wide
 							? label
@@ -85,7 +85,7 @@
 						<text font-size={label * 0.5} y={-0.13 * label} font-weight="bold"
 							>{wide && country.country == 'Northern Ireland' ? 'NI' : country.country}</text
 						>
-						{#each country.data as item, j}
+						{#each country.data as item, j (j)}
 							<!-- svelte-ignore a11y_no_static_element_interactions -->
 							<rect
 								width={s}

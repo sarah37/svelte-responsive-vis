@@ -57,7 +57,6 @@
 		console.log('...updating view landscape');
 		const startTime = performance.now();
 
-		let result = $state();
 		const worker = new Worker();
 
 		worker.onmessage = (event) => {
@@ -116,7 +115,7 @@
 		bind:offsetWidth={width}
 		bind:offsetHeight={height}
 	>
-		{#each views as view, i}
+		{#each views as view, i (i)}
 			<view.type
 				data={view.data}
 				params={view.params}

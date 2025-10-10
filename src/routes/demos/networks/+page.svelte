@@ -111,7 +111,7 @@
 		// 	}
 		// }
 	};
-	const datasetsKeys = Object.keys(datasets);
+	// const datasetsKeys = Object.keys(datasets);
 	let selectedDataset = 'lesmis';
 
 	// based on: https://netpanorama-editor.netlify.app/#marie-boucher

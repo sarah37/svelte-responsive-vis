@@ -3,8 +3,7 @@
 
 	import LoadingSpinner from '$lib/ui/LoadingSpinner.svelte';
 
-	let divAR = $derived(Math.round((width / height) * 100) / 100),
-		divArea = $derived(Math.round(width * height));
+	let divAR = $derived(Math.round((width / height) * 100) / 100);
 </script>
 
 <p>

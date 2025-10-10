@@ -223,7 +223,7 @@
 			data: getBarData(datasets[selectedDataset].data),
 			params: {
 				spec: vl_barchart_vertical,
-				filter: (w, h) => {
+				filter: (w, _h) => {
 					return `datum.i < ${(w - 20) / 20}`;
 				}
 			},
@@ -253,7 +253,7 @@
 <StatusBar {width} {height} bind:landscapeOverlay bind:viewLandscape>
 	Select dataset:
 	<select bind:value={selectedDataset}>
-		{#each datasetsKeys as dataset}
+		{#each datasetsKeys as dataset (dataset)}
 			<option value={dataset}>
 				{datasets[dataset].label}
 			</option>

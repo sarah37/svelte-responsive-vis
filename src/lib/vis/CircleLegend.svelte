@@ -38,7 +38,7 @@
 </script>
 
 <g transform="translate({left}, {top})" stroke-width="{1 / s}px">
-	{#each ticks as d, i}
+	{#each ticks as d, i (i)}
 		<circle fill="none" stroke={color} cx={scale(max)} cy={scale(d)} r={scale(d)} />
 		<line
 			stroke={color}

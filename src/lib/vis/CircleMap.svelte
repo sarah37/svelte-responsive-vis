@@ -6,7 +6,7 @@
 	import Tooltip from '$lib/vis/Tooltip.svelte';
 	import CircleLegend from '$lib/vis/CircleLegend.svelte';
 
-	let { data, params, conditions, context, display } = $props();
+	let { data, params, context, display } = $props();
 
 	let map = $state(),
 		circles = $state();
@@ -68,7 +68,7 @@
 		y = params.dorling ? feature.properties.dorlingY : projection(feature.properties.centroid)[1];
 		content = feature.properties.ADMIN;
 	}
-	function handleMouseout(event) {
+	function handleMouseout() {
 		x = -100;
 		y = -100;
 		content = '';
@@ -81,7 +81,7 @@
 		<g transform="translate({t[0] - s * bounds[0][0]},{t[1] - s * bounds[0][1]}) scale({s})">
 			<!-- transform to make map + circles align with top left corner; will be centered in adapt function -->
 			<g id="map" bind:this={map}>
-				{#each data.features as feature}
+				{#each data.features as feature (feature)}
 					<path
 						class="country"
 						id={feature.properties.ISO_A3}
@@ -93,7 +93,7 @@
 				{/each}
 			</g>
 			<g id="circles" bind:this={circles}>
-				{#each data.features as feature}
+				{#each data.features as feature (feature)}
 					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<circle
 						r={r(feature.properties.POP_EST)}

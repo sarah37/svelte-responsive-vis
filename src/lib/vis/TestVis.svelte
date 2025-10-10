@@ -1,5 +1,5 @@
 <script>
-	let { data, params, conditions, context, display } = $props();
+	let { params, context, display } = $props();
 
 	let height = $derived(context.height);
 	let width = $derived(context.width);

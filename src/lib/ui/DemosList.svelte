@@ -14,7 +14,7 @@
 <!-- reload page entirely when any of these links are clicked -- not sure if necessary? -->
 <nav data-sveltekit-reload>
 	<ul class="demos">
-		{#each demos as item}
+		{#each demos as item (item.slug)}
 			<li><a href="{base}/demos/{item.slug}">{item.title}</a></li>
 		{/each}
 	</ul>

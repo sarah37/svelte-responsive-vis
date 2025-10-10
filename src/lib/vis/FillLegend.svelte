@@ -20,7 +20,7 @@
 
 <g bind:this={g} transform="translate({left}, {top}) scale({s})">
 	<text font-weight="bold" font-size="{12}px" dy={12}>{title}</text>
-	{#each colors as color, i}
+	{#each colors as color, i (i)}
 		<g transform="translate(0,{i * 14 + 17})">
 			<rect width={13} height={13} fill={color} />
 			<text x={14} y={10} font-size="{10}px">{labels[i]}</text>

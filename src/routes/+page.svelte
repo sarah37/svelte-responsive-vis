@@ -1,5 +1,4 @@
 <script>
-	import { base } from '$app/paths';
 	import DemosList from '$lib/ui/DemosList.svelte';
 </script>
 

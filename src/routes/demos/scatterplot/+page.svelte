@@ -1,8 +1,6 @@
 <script>
 	import * as data from '$lib/data/movies/movies.json';
 
-	import { base } from '$app/paths';
-
 	import VegaLiteWrapper from '$lib/vis/VegaLiteWrapper.svelte';
 
 	import StatusBar from '$lib/ui/StatusBar.svelte';
@@ -69,7 +67,7 @@
 			type: VegaLiteWrapper,
 			data,
 			params: { spec: vl_spec_scatterplot },
-			conditions: [maxOverplotting(0.0012, ratings, 3.09)]
+			conditions: [maxOverplotting(0.0012, ratings, radius)]
 		},
 		{
 			type: VegaLiteWrapper,

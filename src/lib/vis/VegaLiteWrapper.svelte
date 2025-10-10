@@ -1,17 +1,8 @@
 <script>
 	import embed from 'vega-embed';
 
-	import maxOverplotting from '$lib/constraints/maxOverplotting';
+	let { params, context, display } = $props();
 
-	let { data, params, conditions, context, display } = $props();
-
-	// these seem to be the same for every plot
-	const margin = {
-		top: 10,
-		bottom: 35,
-		left: 45,
-		right: 3
-	};
 	// unique div id
 	const uid = $props.id();
 	const div = `vegalite-div-${uid}`;

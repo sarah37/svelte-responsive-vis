@@ -4,15 +4,9 @@
 	import FillLegend from '$lib/vis/FillLegend.svelte';
 	import Tooltip from '$lib/vis/Tooltip.svelte';
 
-	import { getMapSetup, fitRect, getAreaSize } from './d3MapHelpers';
+	import { getMapSetup, fitRect } from './d3MapHelpers';
 
-	let {
-		data,
-		params,
-		conditions, // ^ provided by responsive vis component from spec
-		context,
-		display // ^ provided by responsive vis component
-	} = $props();
+	let { data, params, context, display } = $props();
 
 	let height = $derived(context.height);
 	let width = $derived(context.width);
@@ -27,7 +21,7 @@
 	const mesh = topojson.mesh(topo);
 
 	// map projection + measurements
-	const { path, bounds, mapAR, mapInitSize } = getMapSetup(mesh, projection);
+	const { path, bounds, mapInitSize } = getMapSetup(mesh, projection);
 
 	// compute scale and translate
 	let { s, t } = $derived(fitRect(mapInitSize, [width, height]));
@@ -43,7 +37,7 @@
 			? item.properties.PCON13NM
 			: toTitleCase(item.properties.PC_NAME);
 	}
-	function handleMouseout(event) {
+	function handleMouseout() {
 		tx = -100;
 		ty = -100;
 		content = '';
@@ -63,7 +57,7 @@
 			transform="translate({t[0] - s * bounds[0][0]},{t[1] - s * bounds[0][1]}) scale({s})"
 		>
 			<g id="polygons">
-				{#each geo.features as feature}
+				{#each geo.features as feature (feature)}
 					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<path
 						class="area"

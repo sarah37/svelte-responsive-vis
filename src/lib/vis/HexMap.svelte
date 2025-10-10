@@ -3,7 +3,7 @@
 	import FillLegend from '$lib/vis/FillLegend.svelte';
 	import Tooltip from '$lib/vis/Tooltip.svelte';
 	import { createHexMap } from '$lib/vis/hexMapPrep.js';
-	let { data, params, conditions, context, display } = $props();
+	let { data, params, context, display } = $props();
 
 	let height = $derived(context.height);
 	let width = $derived(context.width);
@@ -11,7 +11,7 @@
 	const hex = data.hex;
 	const results = data.results;
 
-	const { hexes, bounds, hexAR, hexInitSize, hexWidth } = createHexMap(hex);
+	const { hexes, bounds, hexInitSize } = createHexMap(hex);
 
 	// compute scale and translate (updated whenever width/height change)
 	let { s, t } = $derived(fitRect(hexInitSize, [width, height]));
@@ -25,7 +25,7 @@
 		ty = event.layerY;
 		content = item.n;
 	}
-	function handleMouseout(event) {
+	function handleMouseout() {
 		// clear and hide outside of viewport
 		tx = -100;
 		ty = -100;
@@ -44,7 +44,7 @@
 			id="hexmap"
 			transform="translate({t[0] - s * bounds[0][0]},{t[1] - s * bounds[0][1]}) scale({s})"
 		>
-			{#each hexes as hex}
+			{#each hexes as hex (hex.key)}
 				<g transform="translate({hex.x},{hex.y})">
 					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<polygon

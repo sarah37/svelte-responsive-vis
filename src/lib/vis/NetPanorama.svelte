@@ -2,7 +2,7 @@
 	import { base } from '$app/paths';
 	import { waitFor } from '$lib/helpers.js';
 
-	let { params, conditions, context, display } = $props();
+	let { params, context, display } = $props();
 
 	// suppress console logs (the library logs a lot)
 	// console.log = function () {};
@@ -23,7 +23,7 @@
 		// render spec
 		NetPanoramaTemplateViewer.render(spec, {}, div);
 		// wait for svg and g to be ready and assign
-		waitFor((_) => document.querySelector('#' + div + ' svg.marks')).then((_) => {
+		waitFor(() => document.querySelector('#' + div + ' svg.marks')).then(() => {
 			svg = document.querySelector('#' + div + ' svg.marks');
 			g = document.querySelector('#' + div + ' svg.marks > g');
 		});
