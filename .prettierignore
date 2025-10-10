@@ -5,6 +5,7 @@ static
 
 node_modules
 /build
+/dist
 /.svelte-kit
 /package
 .env
