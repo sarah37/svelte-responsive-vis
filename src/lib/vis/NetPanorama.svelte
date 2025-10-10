@@ -1,5 +1,5 @@
 <script>
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { waitFor } from '$lib/helpers.js';
 
 	let { params, context, display } = $props();
@@ -47,7 +47,7 @@
 </script>
 
 <svelte:head>
-	<script src="{base}/netpanorama-template-viewer/bundle.js"></script>
+	<script src={resolve("/netpanorama-template-viewer/bundle.js")}></script>
 	<!-- importing via import in the script doesn't work because window is not defined at that point -->
 </svelte:head>
 

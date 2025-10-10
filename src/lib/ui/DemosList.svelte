@@ -1,5 +1,5 @@
 <script>
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 
 	const demos = [
 		{ slug: 'networks', title: 'Networks' },
@@ -15,7 +15,7 @@
 <nav data-sveltekit-reload>
 	<ul class="demos">
 		{#each demos as item (item.slug)}
-			<li><a href="{base}/demos/{item.slug}">{item.title}</a></li>
+			<li><a href={resolve('/demos/[slug]', { slug: item.slug })}>{item.title}</a></li>
 		{/each}
 	</ul>
 </nav>
