@@ -1,6 +1,8 @@
 // helper/setup functions for circle + choropleth maps
 
-import { geoPath, scaleSqrt, max } from 'd3';
+import { max } from 'd3-array';
+import { scaleSqrt } from 'd3-scale';
+import { geoPath } from 'd3-geo';
 
 export function getRadiusScale(data, maxCircle) {
 	return scaleSqrt()

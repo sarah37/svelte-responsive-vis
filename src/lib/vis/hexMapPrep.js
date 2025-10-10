@@ -1,4 +1,4 @@
-import { max, min } from 'd3';
+import { max, min } from 'd3-array';
 import { renderHexJSON } from 'd3-hexjson';
 
 function createHexMap(hex) {

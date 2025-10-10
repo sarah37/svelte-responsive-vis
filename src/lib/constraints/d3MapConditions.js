@@ -5,7 +5,7 @@ import {
 	getMapSetup,
 	getRadiusScale
 } from '$lib/vis/d3MapHelpers';
-import { min } from 'd3';
+import { min } from 'd3-array';
 
 export function minCircleRadius(minCircleRadius, maxCircle, projection, data) {
 	const pop_vals = data.features.map((d) => d.properties.POP_EST);

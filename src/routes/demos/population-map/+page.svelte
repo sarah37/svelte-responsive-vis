@@ -1,5 +1,7 @@
 <script>
-	import { geoEqualEarth, schemeTableau10, scaleOrdinal } from 'd3';
+	import { geoEqualEarth } from 'd3-geo';
+	import { schemeTableau10 } from 'd3-scale-chromatic';
+	import { scaleOrdinal } from 'd3-scale';
 
 	import * as data from '$lib/data/world-population/world_with_continent.json';
 	import * as data_americas from '$lib/data/world-population/subset_americas.json';

@@ -1,5 +1,7 @@
 <script>
-	import { csvParse, geoAlbers, scaleOrdinal } from 'd3';
+	import { csvParse } from 'd3-dsv';
+	import { geoAlbers } from 'd3-geo';
+	import { scaleOrdinal } from 'd3-scale';
 	import { feature } from 'topojson-client';
 
 	import * as map from '$lib/data/uk-election/merged.json';

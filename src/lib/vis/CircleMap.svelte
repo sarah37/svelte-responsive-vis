@@ -1,5 +1,5 @@
 <script>
-	import { forceSimulation, forceX, forceY, forceCollide } from 'd3';
+	import { forceSimulation, forceX, forceY, forceCollide } from 'd3-force';
 
 	import { getMapSetup, getMapScaleTranslate, getRadiusScale } from '$lib/vis/d3MapHelpers.js';
 

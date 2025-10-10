@@ -1,4 +1,4 @@
-import { scaleLinear } from 'd3';
+import { scaleLinear } from 'd3-scale';
 
 function dist(a, b) {
 	const dx = a[0] - b[0];

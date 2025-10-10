@@ -1,5 +1,6 @@
 <script>
-	import { range, schemeSet3 } from 'd3';
+	import { range } from 'd3-array';
+	import { schemeSet3 } from 'd3-scale-chromatic';
 	import { onMount, tick } from 'svelte';
 
 	import Worker from './worker_view_landscape.js?worker';
