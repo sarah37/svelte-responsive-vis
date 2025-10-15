@@ -1,8 +1,15 @@
 <script>
 	let { viewLandscape } = $props();
+
+	// will only run once when this component is mounted, should be enough warning
+	if (!viewLandscape || viewLandscape.status !== 'complete') {
+		console.warn(
+			'You have enabled the view landscape overlay but no view landscape is available. Make sure that view landscape computation is enabled.'
+		);
+	}
 </script>
 
-{#if viewLandscape.status === 'complete'}
+{#if viewLandscape && viewLandscape.status === 'complete'}
 	<div
 		id="landscape-overlay"
 		style="width:{viewLandscape.size[0]}px; height:{viewLandscape
