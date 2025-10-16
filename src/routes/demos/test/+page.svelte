@@ -1,6 +1,6 @@
 <script>
 	import StatusBar from '$lib/ui/StatusBar.svelte';
-	import ResponsiveVis from '$lib/ResponsiveVis.svelte';
+	import { ResponsiveVis, View } from '$lib';
 	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
 
 	import TestVis from '$lib/vis/TestVis.svelte';
@@ -8,27 +8,6 @@
 
 	let width = $state(),
 		height = $state();
-
-	const views = [
-		{
-			type: TestVis,
-			data: [],
-			params: { color: '#000' },
-			conditions: [minWidth(600)]
-		},
-		{
-			type: TestVis,
-			data: [],
-			params: { color: '#f00' },
-			conditions: [minHeight(350)]
-		},
-		{
-			type: TestVis,
-			data: [],
-			params: { color: '#00f' },
-			conditions: []
-		}
-	];
 
 	let viewLandscape = $state(),
 		landscapeOverlay = $state(false);
@@ -41,16 +20,23 @@
 <StatusBar {width} {height} bind:landscapeOverlay bind:viewLandscape />
 
 <ResponsiveVis
-	{views}
+	resizable
+	computeViewLandscape
+	viewLandscapeOverlay={landscapeOverlay}
 	minSize={{ w: 100, h: 100 }}
 	maxSize={{ w: 1000, h: 1000 }}
 	initSize={{ w: 800, h: 600 }}
 	bind:width
 	bind:height
-	computeViewLandscape={true}
 	bind:viewLandscape
 >
-	{#if landscapeOverlay}
-		<ViewLandscapeOverlay {viewLandscape} />
-	{/if}
+	<View conditions={[minWidth(600)]}>
+		<TestVis color="#000" />
+	</View>
+	<View conditions={[minHeight(350)]}>
+		<TestVis color="#f00" />
+	</View>
+	<View>
+		<TestVis color="#00f" />
+	</View>
 </ResponsiveVis>

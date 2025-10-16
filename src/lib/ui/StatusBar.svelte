@@ -4,13 +4,11 @@
 	import LoadingSpinner from '$lib/ui/LoadingSpinner.svelte';
 
 	let divAR = $derived(Math.round((width / height) * 100) / 100);
+
+	$inspect(viewLandscape);
 </script>
 
-<p>
-	<strong>
-		Resize the container using the handle in the botton right and watch the visualization update.
-	</strong>
-</p>
+<p>Resize the container using the handle in the botton right and watch the visualization update.</p>
 <hr />
 <p>
 	<span class="left"><strong>Current size</strong></span>
@@ -43,26 +41,28 @@
 <p class="marginLeft customRVOptions">{@render children?.()}</p>
 
 <style>
-	p {
+	p,
+	span,
+	hr {
 		margin: 0;
-		line-height: 1.3rem;
+		font-size: 0.9rem;
+		line-height: 1.5em;
 	}
 	hr {
 		border: none;
 		border-top: 1px solid #ccc;
-		margin: 0;
-		max-width: 41rem;
+		max-width: 43.5em;
 	}
 	span.stats {
 		display: inline-block;
-		width: 6.5rem;
+		width: 9em;
 	}
 	span.left {
 		display: inline-block;
-		width: 5rem;
+		width: 7em;
 	}
 	p.marginLeft {
-		margin-left: 5rem;
+		margin-left: 7em;
 	}
 	input[type='checkbox'],
 	:global(.customRVOptions > input[type='checkbox']) {
@@ -74,13 +74,13 @@
 		color: black;
 		border: 1px solid #ccc;
 		border-radius: 2rem;
-		padding: 0 0.5rem 0 0.5rem;
+		padding: 0 0.5rem 0 0.3rem;
 		font-size: 0.75rem;
 		height: 1.25rem;
 	}
 	button:hover {
-		background-color: #8493d2;
-		color: #f6f6f6;
-		border-color: #f6f6f6;
+		background-color: #d2e5b6;
+		/* color: #f6f6f6; */
+		border-color: #9fb087;
 	}
 </style>

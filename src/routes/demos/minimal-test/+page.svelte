@@ -1,34 +1,22 @@
 <script>
-	import ResponsiveVis from '$lib/ResponsiveVis.svelte';
-
+	import { ResponsiveVis, View } from '$lib';
+	import { minHeight, minWidth } from '$lib/constraints/';
 	import TestVis from '$lib/vis/TestVis.svelte';
-	import { minHeight, minWidth } from '$lib/constraints/simple.js';
-
-	const views = [
-		{
-			type: TestVis,
-			data: [],
-			params: { color: '#000' },
-			conditions: [minWidth(600)]
-		},
-		{
-			type: TestVis,
-			data: [],
-			params: { color: '#f00' },
-			conditions: [minHeight(350)]
-		},
-		{
-			type: TestVis,
-			data: [],
-			params: { color: '#00f' },
-			conditions: []
-		}
-	];
 </script>
 
 <ResponsiveVis
-	{views}
+	resizable
 	minSize={{ w: 100, h: 100 }}
 	maxSize={{ w: 1000, h: 1000 }}
 	initSize={{ w: 800, h: 600 }}
-/>
+>
+	<View conditions={[minWidth(600)]}>
+		<TestVis color="#000" />
+	</View>
+	<View conditions={[minHeight(350)]}>
+		<TestVis color="#f00" />
+	</View>
+	<View>
+		<TestVis color="#00f" />
+	</View>
+</ResponsiveVis>
