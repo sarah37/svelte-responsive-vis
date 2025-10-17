@@ -6,19 +6,15 @@
 	import Tooltip from '$lib/vis/Tooltip.svelte';
 	import CircleLegend from '$lib/vis/CircleLegend.svelte';
 
-	let { data, params, context, display } = $props();
+	let { data, projection, maxCircle, circleColor, dorling = false, width, height } = $props();
 
 	let map = $state(),
 		circles = $state();
 
-	let height = $derived(context.height);
-	let width = $derived(context.width);
-	let projection = $derived(params.projection);
-
 	let { path, bounds, mapAR, mapInitSize } = $derived(getMapSetup(data, projection));
 
 	// circle radius (slightly bigger for Dorling)
-	let r = $derived(getRadiusScale(data, params.maxCircle));
+	let r = $derived(getRadiusScale(data, maxCircle));
 
 	// configure circle legend
 	const legend = {
@@ -31,7 +27,7 @@
 	const legendTickValues = Object.keys(legend);
 
 	$effect(() => {
-		if (params.dorling) {
+		if (dorling) {
 			// get Dorling cartogram positions
 			// adds/updates d.x and d.y
 			let dorlingSimulation = forceSimulation(data.features)
@@ -64,8 +60,8 @@
 		y = $state(),
 		content = $state();
 	function handleMouseover(event, feature) {
-		x = params.dorling ? feature.properties.dorlingX : projection(feature.properties.centroid)[0];
-		y = params.dorling ? feature.properties.dorlingY : projection(feature.properties.centroid)[1];
+		x = dorling ? feature.properties.dorlingX : projection(feature.properties.centroid)[0];
+		y = dorling ? feature.properties.dorlingY : projection(feature.properties.centroid)[1];
 		content = feature.properties.ADMIN;
 	}
 	function handleMouseout() {
@@ -75,59 +71,52 @@
 	}
 </script>
 
-<!-- only display if this view state is selected -->
-{#if display}
-	<svg {width} {height}>
-		<g transform="translate({t[0] - s * bounds[0][0]},{t[1] - s * bounds[0][1]}) scale({s})">
-			<!-- transform to make map + circles align with top left corner; will be centered in adapt function -->
-			<g id="map" bind:this={map}>
-				{#each data.features as feature (feature)}
-					<path
-						class="country"
-						id={feature.properties.ISO_A3}
-						d={path(feature)}
-						fill="#f5f5f5"
-						stroke="#e0e0e0"
-						stroke-width="{0.7 / s}px"
-					/>
-				{/each}
-			</g>
-			<g id="circles" bind:this={circles}>
-				{#each data.features as feature (feature)}
-					<!-- svelte-ignore a11y_no_static_element_interactions -->
-					<circle
-						r={r(feature.properties.POP_EST)}
-						cx={params.dorling
-							? feature.properties.dorlingX
-							: projection(feature.properties.centroid)[0]}
-						cy={params.dorling
-							? feature.properties.dorlingY
-							: projection(feature.properties.centroid)[1]}
-						fill={params.circleColor(feature)}
-						stroke={params.circleColor(feature)}
-						fill-opacity="0.4"
-						stroke-width="{1 / s}px"
-						onfocus={(e) => handleMouseover(e, feature)}
-						onmouseover={(e) => handleMouseover(e, feature)}
-						onmouseout={handleMouseout}
-						onblur={handleMouseout}
-					/>
-				{/each}
-			</g>
-			<CircleLegend
-				x={5 + bounds[0][0]}
-				y={mapInitSize[1] + bounds[0][1] - 5}
-				anchorX="left"
-				anchorY="bottom"
-				scale={r}
-				tickValues={legendTickValues}
-				tickFormat={legendTickFormat}
-				{s}
-			/>
-			<Tooltip bind:x bind:y bind:content fontSize={12 / s} />
-		</g></svg
-	>
-{/if}
+<svg {width} {height}>
+	<g transform="translate({t[0] - s * bounds[0][0]},{t[1] - s * bounds[0][1]}) scale({s})">
+		<!-- transform to make map + circles align with top left corner; will be centered in adapt function -->
+		<g id="map" bind:this={map}>
+			{#each data.features as feature (feature)}
+				<path
+					class="country"
+					id={feature.properties.ISO_A3}
+					d={path(feature)}
+					fill="#f5f5f5"
+					stroke="#e0e0e0"
+					stroke-width="{0.7 / s}px"
+				/>
+			{/each}
+		</g>
+		<g id="circles" bind:this={circles}>
+			{#each data.features as feature (feature)}
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
+				<circle
+					r={r(feature.properties.POP_EST)}
+					cx={dorling ? feature.properties.dorlingX : projection(feature.properties.centroid)[0]}
+					cy={dorling ? feature.properties.dorlingY : projection(feature.properties.centroid)[1]}
+					fill={circleColor(feature)}
+					stroke={circleColor(feature)}
+					fill-opacity="0.4"
+					stroke-width="{1 / s}px"
+					onfocus={(e) => handleMouseover(e, feature)}
+					onmouseover={(e) => handleMouseover(e, feature)}
+					onmouseout={handleMouseout}
+					onblur={handleMouseout}
+				/>
+			{/each}
+		</g>
+		<CircleLegend
+			x={5 + bounds[0][0]}
+			y={mapInitSize[1] + bounds[0][1] - 5}
+			anchorX="left"
+			anchorY="bottom"
+			scale={r}
+			tickValues={legendTickValues}
+			tickFormat={legendTickFormat}
+			{s}
+		/>
+		<Tooltip bind:x bind:y bind:content fontSize={12 / s} />
+	</g></svg
+>
 
 <style>
 	circle:hover {
