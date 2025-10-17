@@ -3,10 +3,8 @@
 	import FillLegend from '$lib/vis/FillLegend.svelte';
 	import Tooltip from '$lib/vis/Tooltip.svelte';
 	import { createHexMap } from '$lib/vis/hexMapPrep.js';
-	let { data, params, context, display } = $props();
 
-	let height = $derived(context.height);
-	let width = $derived(context.width);
+	let { data, width, height, colors, colorScale, category_labels, title } = $props();
 
 	const hex = data.hex;
 	const results = data.results;
@@ -33,54 +31,51 @@
 	}
 </script>
 
-<!-- only display if this view state is selected -->
-{#if display}
-	<svg {width} {height}>
-		<clipPath id="hex-clip-path">
-			<polygon points={hexes[0].points} />
-		</clipPath>
+<svg {width} {height}>
+	<clipPath id="hex-clip-path">
+		<polygon points={hexes[0].points} />
+	</clipPath>
 
-		<g
-			id="hexmap"
-			transform="translate({t[0] - s * bounds[0][0]},{t[1] - s * bounds[0][1]}) scale({s})"
-		>
-			{#each hexes as hex (hex.key)}
-				<g transform="translate({hex.x},{hex.y})">
-					<!-- svelte-ignore a11y_no_static_element_interactions -->
-					<polygon
-						class="hex"
-						points={hex.points}
-						stroke="#fff"
-						stroke-width="2"
-						fill={params.colorScale(results.find((x) => x.ons_id === hex.key).first_party)}
-						clip-path="url(#hex-clip-path)"
-						onfocus={(e) => handleMouseover(e, hex)}
-						onmouseover={(e) => handleMouseover(e, hex)}
-						onmouseout={handleMouseout}
-						onblur={handleMouseout}
-					/>
-				</g>
-			{/each}
-			<FillLegend
-				colors={params.colors}
-				labels={params.category_labels}
-				title={params.title}
-				x={hexInitSize[0] + bounds[0][0] - 3}
-				y={bounds[0][1] + 3}
-				anchorX="right"
-				s="0.97"
-			/>
-		</g>
-		<Tooltip
-			bind:x={tx}
-			bind:y={ty}
-			bind:content
-			backgroundColor="#fffd"
-			textAnchor="left"
-			dominantBaseline="top"
+	<g
+		id="hexmap"
+		transform="translate({t[0] - s * bounds[0][0]},{t[1] - s * bounds[0][1]}) scale({s})"
+	>
+		{#each hexes as hex (hex.key)}
+			<g transform="translate({hex.x},{hex.y})">
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
+				<polygon
+					class="hex"
+					points={hex.points}
+					stroke="#fff"
+					stroke-width="2"
+					fill={colorScale(results.find((x) => x.ons_id === hex.key).first_party)}
+					clip-path="url(#hex-clip-path)"
+					onfocus={(e) => handleMouseover(e, hex)}
+					onmouseover={(e) => handleMouseover(e, hex)}
+					onmouseout={handleMouseout}
+					onblur={handleMouseout}
+				/>
+			</g>
+		{/each}
+		<FillLegend
+			{colors}
+			labels={category_labels}
+			{title}
+			x={hexInitSize[0] + bounds[0][0] - 3}
+			y={bounds[0][1] + 3}
+			anchorX="right"
+			s="0.97"
 		/>
-	</svg>
-{/if}
+	</g>
+	<Tooltip
+		bind:x={tx}
+		bind:y={ty}
+		bind:content
+		backgroundColor="#fffd"
+		textAnchor="left"
+		dominantBaseline="top"
+	/>
+</svg>
 
 <style>
 	polygon:hover {

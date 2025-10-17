@@ -1,11 +1,8 @@
 <script>
 	import Tooltip from '$lib/vis/Tooltip.svelte';
-	let { data, params, context, display } = $props();
+	let { data, orientation, colorScale, width, height } = $props();
 
-	let height = $derived(context.height);
-	let width = $derived(context.width);
-
-	const results = data.results;
+	const results = data;
 
 	const countries = ['Scotland', 'Northern Ireland', 'Wales', 'England'].map((d) => ({
 		country: d,
@@ -36,7 +33,7 @@
 	// (width / size+padding) * (height / size+padding) = n_squares + 4 * (width / size+padding)
 
 	// Layout
-	let wide = params.orientation == 'horizontal'; // vertical is default
+	let wide = orientation == 'horizontal'; // vertical is default
 
 	let label = 22; // could update this step-wise?
 	let margin = 3;
@@ -70,51 +67,49 @@
 	}
 </script>
 
-{#if display}
-	<svg {width} {height} id="svg">
-		<clipPath id="rect-clip-path" />
+<svg {width} {height} id="svg">
+	<clipPath id="rect-clip-path" />
 
-		<g id="wafflechart">
-			<g transform="translate({margin},{margin})">
-				{#each countries as country, i (i)}
-					<g
-						transform="translate({wide ? translate[i] + gap * i : 0},{wide
-							? label
-							: translate[i] + label * (i + 1)})"
+	<g id="wafflechart">
+		<g transform="translate({margin},{margin})">
+			{#each countries as country, i (i)}
+				<g
+					transform="translate({wide ? translate[i] + gap * i : 0},{wide
+						? label
+						: translate[i] + label * (i + 1)})"
+				>
+					<text font-size={label * 0.5} y={-0.13 * label} font-weight="bold"
+						>{wide && country.country == 'Northern Ireland' ? 'NI' : country.country}</text
 					>
-						<text font-size={label * 0.5} y={-0.13 * label} font-weight="bold"
-							>{wide && country.country == 'Northern Ireland' ? 'NI' : country.country}</text
-						>
-						{#each country.data as item, j (j)}
-							<!-- svelte-ignore a11y_no_static_element_interactions -->
-							<rect
-								width={s}
-								height={s}
-								stroke="#fff"
-								stroke-width="1"
-								x={wide ? Math.floor(j / row_col) * s : (j % row_col) * s}
-								y={wide ? (j % row_col) * s : Math.floor(j / row_col) * s}
-								fill={params.colorScale(item.first_party)}
-								onfocus={(e) => handleMouseover(e, item)}
-								onmouseover={(e) => handleMouseover(e, item)}
-								onmouseout={handleMouseout}
-								onblur={handleMouseout}
-							/>
-						{/each}
-					</g>
-				{/each}
-			</g>
+					{#each country.data as item, j (j)}
+						<!-- svelte-ignore a11y_no_static_element_interactions -->
+						<rect
+							width={s}
+							height={s}
+							stroke="#fff"
+							stroke-width="1"
+							x={wide ? Math.floor(j / row_col) * s : (j % row_col) * s}
+							y={wide ? (j % row_col) * s : Math.floor(j / row_col) * s}
+							fill={colorScale(item.first_party)}
+							onfocus={(e) => handleMouseover(e, item)}
+							onmouseover={(e) => handleMouseover(e, item)}
+							onmouseout={handleMouseout}
+							onblur={handleMouseout}
+						/>
+					{/each}
+				</g>
+			{/each}
 		</g>
-		<Tooltip
-			bind:x
-			bind:y
-			bind:content
-			backgroundColor="#fffd"
-			textAnchor="left"
-			dominantBaseline="top"
-		/>
-	</svg>
-{/if}
+	</g>
+	<Tooltip
+		bind:x
+		bind:y
+		bind:content
+		backgroundColor="#fffd"
+		textAnchor="left"
+		dominantBaseline="top"
+	/>
+</svg>
 
 <style>
 	rect:hover {

@@ -13,8 +13,7 @@
 	import WaffleChart from '$lib/vis/WaffleChart.svelte';
 
 	import StatusBar from '$lib/ui/StatusBar.svelte';
-	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
-	import ResponsiveVis from '$lib/ResponsiveVis.svelte';
+	import { ResponsiveVis, View } from '$lib';
 	import { maxAspectRatio } from '$lib/constraints/simple';
 	import {
 		maxAspectRatioDiff as maxAspectRatioDiffHex,
@@ -72,52 +71,6 @@
 
 	let arConditions = $state(false);
 
-	let views = $derived([
-		{
-			type: ChoroplethMap,
-			data: { map, results },
-			params: {
-				colors: colors,
-				category_labels: category_labels,
-				title: 'UK General Election 2019',
-				projection: geoAlbers().rotate([0, 0]),
-				map_id: (d) => d.properties.id,
-				data_id: (d) => d.ons_id,
-				colorScale: colorScale,
-				values: (d) => d.first_party
-			},
-			conditions: [
-				minAreaSize(2, geoAlbers().rotate([0, 0]), feature(map, map.objects.merged)),
-				arConditions
-					? maxAspectRatioDiff(2, geoAlbers().rotate([0, 0]), feature(map, map.objects.merged))
-					: () => true
-			]
-		},
-		{
-			type: HexMap,
-			data: { hex, results },
-			params: {
-				colors: colors,
-				category_labels: category_labels,
-				title: 'UK General Election 2019',
-				colorScale: colorScale
-			},
-			conditions: [minHexSize(5, hex), arConditions ? maxAspectRatioDiffHex(2, hex) : () => true]
-		},
-		{
-			type: WaffleChart,
-			data: { results },
-			params: { colorScale, orientation: 'vertical' },
-			conditions: [maxAspectRatio(1)]
-		},
-		{
-			type: WaffleChart,
-			data: { results },
-			params: { colorScale, orientation: 'horizontal' },
-			conditions: []
-		}
-	]);
-
 	let viewLandscape = $state(),
 		landscapeOverlay = $state(false);
 </script>
@@ -134,16 +87,55 @@
 </StatusBar>
 
 <ResponsiveVis
-	{views}
+	resizable
 	initSize={{ w: 700, h: 700 }}
 	maxSize={{ w: 1000, h: 700 }}
 	minSize={{ w: 150, h: 150 }}
 	bind:width
 	bind:height
-	computeViewLandscape={true}
+	computeViewLandscape
 	bind:viewLandscape
+	viewLandscapeOverlay={landscapeOverlay}
 >
-	{#if landscapeOverlay}
-		<ViewLandscapeOverlay {viewLandscape} />
-	{/if}
+	<View
+		conditions={[
+			minAreaSize(2, geoAlbers().rotate([0, 0]), feature(map, map.objects.merged)),
+			arConditions
+				? maxAspectRatioDiff(2, geoAlbers().rotate([0, 0]), feature(map, map.objects.merged))
+				: () => true
+		]}
+	>
+		<ChoroplethMap
+			{width}
+			{height}
+			data={{ map, results }}
+			{colors}
+			{category_labels}
+			title="UK General Election 2019"
+			projection={geoAlbers().rotate([0, 0])}
+			map_id={(d) => d.properties.id}
+			data_id={(d) => d.ons_id}
+			{colorScale}
+			values={(d) => d.first_party}
+		/>
+	</View>
+	<View
+		conditions={[minHexSize(5, hex), arConditions ? maxAspectRatioDiffHex(2, hex) : () => true]}
+	>
+		<HexMap
+			{width}
+			{height}
+			data={{ hex, results }}
+			{colors}
+			{category_labels}
+			title="UK General Election 2019"
+			{colorScale}
+		/>
+	</View>
+	<View conditions={[maxAspectRatio(1)]}>
+		<WaffleChart {width} {height} data={results} {colorScale} orientation="vertical" />
+	</View>
+	<View>
+		<WaffleChart {width} {height} data={results} {colorScale} orientation="horizontal" />
+	</View>
 </ResponsiveVis>
