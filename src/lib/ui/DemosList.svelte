@@ -1,14 +1,14 @@
 <script>
 	import { resolve } from '$app/paths';
 
-	const demos = [
-		{ slug: 'networks', title: 'Networks' },
-		{ slug: 'population-map', title: 'Population Map' },
-		{ slug: 'scatterplot', title: 'Movies Scatterplot' },
-		{ slug: 'uk-election', title: 'UK Election Map' },
-		{ slug: 'test', title: 'Test Page' },
-		{ slug: 'minimal-test', title: 'Test Page (minimal)' }
-	];
+	// get paths for all demos
+	const demos = Object.keys(
+		import.meta.glob('/src/routes/demos/**/+page.svelte', {
+			eager: true
+		})
+	)
+		.map((key) => key.replace(/\/src\/routes\/demos\/|\/?\+page\.svelte/g, ''))
+		.map((slug) => ({ slug: slug, title: slug.replace('-', ' ') }));
 </script>
 
 <!-- reload page entirely when any of these links are clicked -- not sure if necessary? -->
