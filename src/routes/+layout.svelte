@@ -1,8 +1,10 @@
 <script>
+	import { resolve } from '$app/paths';
+
 	let { children } = $props();
 </script>
 
-<h1>Responsive Visualization with Svelte</h1>
+<a href={resolve('/')}><h1>Responsive Visualization with Svelte</h1></a>
 
 <div id="content">
 	{@render children?.()}
@@ -23,6 +25,10 @@
 
 	h1 {
 		margin: 10px;
+	}
+	a {
+		text-decoration: none;
+		color: #000;
 	}
 
 	#content {
