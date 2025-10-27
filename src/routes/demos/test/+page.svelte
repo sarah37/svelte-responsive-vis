@@ -1,10 +1,9 @@
 <script>
 	import StatusBar from '$lib/ui/StatusBar.svelte';
-	import { ResponsiveVis, View } from '$lib';
-	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
+	import { ResponsiveVis, View } from 'svelte-responsive-vis';
+	import { minHeight, minWidth } from 'svelte-responsive-vis/constraints';
 
 	import TestVis from '$lib/vis/TestVis.svelte';
-	import { minHeight, minWidth } from '$lib/constraints/simple.js';
 
 	let width = $state(),
 		height = $state();

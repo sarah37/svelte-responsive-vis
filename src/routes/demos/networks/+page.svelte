@@ -1,5 +1,5 @@
 <script>
-	import { ResponsiveVis } from '$lib';
+	import { ResponsiveVis } from 'svelte-responsive-vis';
 
 	import StatusBar from '$lib/ui/StatusBar.svelte';
 	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';

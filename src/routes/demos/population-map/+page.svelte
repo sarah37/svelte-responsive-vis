@@ -2,11 +2,12 @@
 	import * as data from '$lib/data/world-population/world_with_continent.json';
 	import * as data_americas from '$lib/data/world-population/subset_americas.json';
 
+	import { ResponsiveVis, View } from 'svelte-responsive-vis';
+	import { minAspectRatio, maxAspectRatioDiff } from 'svelte-responsive-vis/constraints';
+
 	import StatusBar from '$lib/ui/StatusBar.svelte';
-	import { ResponsiveVis, View } from '$lib';
+
 	import { default as CircleMap, minCircleRadius } from '$lib/vis/CircleMap.svelte';
-	import { minAspectRatio } from '$lib/constraints';
-	import { maxAspectRatioDiff } from '$lib/constraints/d3MapConditions.js';
 
 	import { geoEqualEarth } from 'd3-geo';
 	import { schemeTableau10 } from 'd3-scale-chromatic';

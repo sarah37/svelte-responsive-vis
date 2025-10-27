@@ -4,23 +4,21 @@
 	import { scaleOrdinal } from 'd3-scale';
 	import { feature } from 'topojson-client';
 
-	import { ResponsiveVis, View } from '$lib';
+	import { ResponsiveVis, View } from 'svelte-responsive-vis';
+	import {
+		maxAspectRatioDiff,
+		minAreaSize,
+		maxAspectRatio
+	} from 'svelte-responsive-vis/constraints';
 
 	import ChoroplethMap from '$lib/vis/ChoroplethMap.svelte';
-
 	import {
 		default as HexMap,
 		maxAspectRatioDiff as maxAspectRatioDiffHex,
 		minHexSize
 	} from '$lib/vis/HexMap.svelte';
-
 	import WaffleChart from '$lib/vis/WaffleChart.svelte';
-	import { maxAspectRatio } from '$lib/constraints/simple';
-
 	import StatusBar from '$lib/ui/StatusBar.svelte';
-
-	import { maxAspectRatioDiff, minAreaSize } from '$lib/constraints/d3MapConditions';
-
 	import * as map from '$lib/data/uk-election/merged.json';
 	import * as hex from '$lib/data/uk-election/test.hex.json';
 	import resultsRaw from '$lib/data/uk-election/HoC-GE2019-results-by-constituency-csv.csv?raw';

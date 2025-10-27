@@ -1,6 +1,7 @@
 <script>
-	import { ResponsiveVis, View } from '$lib';
-	import { minHeight, minWidth } from '$lib/constraints/';
+	import { ResponsiveVis, View } from 'svelte-responsive-vis';
+	import { minHeight, minWidth } from 'svelte-responsive-vis/constraints';
+
 	import TestVis from '$lib/vis/TestVis.svelte';
 
 	let height = $state();

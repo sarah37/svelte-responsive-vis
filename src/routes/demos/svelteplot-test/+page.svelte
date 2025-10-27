@@ -3,7 +3,8 @@
 
 	import { Plot, Rect, Dot, bin } from 'svelteplot';
 
-	import { ResponsiveVis, View, minWidth } from '$lib';
+	import { ResponsiveVis, View } from 'svelte-responsive-vis';
+	import { minWidth } from 'svelte-responsive-vis/constraints';
 
 	let movies_binned = $derived(
 		bin({ data: movies.default, x: 'IMDB Rating', y: 'Rotten Tomatoes Rating' }, { fill: 'count' })

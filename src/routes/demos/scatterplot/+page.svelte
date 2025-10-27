@@ -1,10 +1,10 @@
 <script>
-	import { ResponsiveVis } from '$lib';
+	import { ResponsiveVis } from 'svelte-responsive-vis';
+	import { maxOverplotting } from 'svelte-responsive-vis/constraints';
 
 	import VegaLiteWrapper from '$lib/vis/VegaLiteWrapper.svelte';
 	import StatusBar from '$lib/ui/StatusBar.svelte';
 	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
-	import maxOverplotting from '$lib/constraints/maxOverplotting';
 
 	import * as data from '$lib/data/movies/movies.json';
 
