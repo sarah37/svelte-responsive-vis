@@ -6,7 +6,7 @@ function dist(a, b) {
 	return Math.sqrt(dx * dx + dy * dy);
 }
 
-export default function maxOverplotting(max, pos, r) {
+export function maxOverplotting(max, pos, r) {
 	// n choose 2 -- the number of unique pairs in the dataset
 	// this number is what the overlap score would be if all points were fully identical
 	const normalization_factor = (pos.length * (pos.length - 1)) / 2;
