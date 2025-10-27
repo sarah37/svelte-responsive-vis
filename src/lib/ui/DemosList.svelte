@@ -8,7 +8,7 @@
 		})
 	)
 		.map((key) => key.replace(/\/src\/routes\/demos\/|\/?\+page\.svelte/g, ''))
-		.map((slug) => ({ slug: slug, title: slug.replace('-', ' ') }));
+		.map((slug) => ({ slug: slug, title: slug.replaceAll('-', ' ') }));
 </script>
 
 <!-- reload page entirely when any of these links are clicked -- not sure if necessary? -->
