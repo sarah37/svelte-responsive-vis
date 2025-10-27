@@ -1,4 +1,4 @@
-import { createHexMap } from '$lib/vis/hexMapPrep';
+import { createHexMap } from '$lib/vis/HexMap.svelte';
 import { fitRect, getAspectRatioDifference } from '$lib/vis/d3MapHelpers.js';
 
 function minHexSize(minSize, hex) {

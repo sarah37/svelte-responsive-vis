@@ -1,6 +1,5 @@
 <script>
 	import { resolve } from '$app/paths';
-	import { waitFor } from '$lib/helpers.js';
 
 	let { params, context, display } = $props();
 
@@ -44,13 +43,19 @@
 			);
 		}
 	});
+
+	function waitFor(conditionFunction) {
+		const poll = (resolve) => {
+			if (conditionFunction()) resolve();
+			else setTimeout(() => poll(resolve), 400);
+		};
+		return new Promise(poll);
+	}
 </script>
 
 <svelte:head>
-	<script src={resolve("/netpanorama-template-viewer/bundle.js")}></script>
+	<script src={resolve('/netpanorama-template-viewer/bundle.js')}></script>
 	<!-- importing via import in the script doesn't work because window is not defined at that point -->
 </svelte:head>
 
-<!-- N.B. The closing tags are necessary - making this div tag self-closing will cause errors -->
-<!-- prettier-ignore -->
-<div id={div} style='display: {display? 'block' : 'none'}' ></div>
+<div id={div} style="display: {display ? 'block' : 'none'}"></div>

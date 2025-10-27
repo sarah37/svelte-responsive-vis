@@ -1,10 +1,9 @@
 <script>
 	import * as topojson from 'topojson-client';
 
-	import FillLegend from '$lib/vis/FillLegend.svelte';
-	import Tooltip from '$lib/vis/Tooltip.svelte';
-
-	import { getMapSetup, fitRect } from './d3MapHelpers';
+	import FillLegend from './FillLegend.svelte';
+	import Tooltip from './Tooltip.svelte';
+	import { getMapSetup, fitRect } from './d3MapHelpers.js';
 
 	let { data, width, height, projection, map_id, colorScale, colors, category_labels, title } =
 		$props();

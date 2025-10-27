@@ -1,5 +1,6 @@
 <script>
-	import Tooltip from '$lib/vis/Tooltip.svelte';
+	import Tooltip from './Tooltip.svelte';
+
 	let { data, orientation, colorScale, width, height } = $props();
 
 	const results = data;

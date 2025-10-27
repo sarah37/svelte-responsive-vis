@@ -31,12 +31,12 @@
 	bind:viewLandscape
 >
 	<View conditions={[minWidth(600)]}>
-		<TestVis color="#000" />
+		<TestVis color="#000" {width} {height} />
 	</View>
 	<View conditions={[minHeight(350)]}>
-		<TestVis color="#f00" />
+		<TestVis color="#f00" {width} {height} />
 	</View>
 	<View>
-		<TestVis color="#00f" />
+		<TestVis color="#00f" {width} {height} />
 	</View>
 </ResponsiveVis>
