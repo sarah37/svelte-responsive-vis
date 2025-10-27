@@ -4,14 +4,14 @@
 
 	import StatusBar from '$lib/ui/StatusBar.svelte';
 	import { ResponsiveVis, View } from '$lib';
+	import { default as CircleMap, minCircleRadius } from '$lib/vis/CircleMap.svelte';
 	import { minAspectRatio } from '$lib/constraints';
-	import { maxAspectRatioDiff, minCircleRadius } from '$lib/constraints/d3MapConditions.js';
+	import { maxAspectRatioDiff } from '$lib/constraints/d3MapConditions.js';
 
 	import { geoEqualEarth } from 'd3-geo';
 	import { schemeTableau10 } from 'd3-scale-chromatic';
 	import { scaleOrdinal } from 'd3-scale';
 	import { Plot, BarX, BarY } from 'svelteplot';
-	import CircleMap from '$lib/vis/CircleMap.svelte';
 
 	let width = $state(),
 		height = $state();

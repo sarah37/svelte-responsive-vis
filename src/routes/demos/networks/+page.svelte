@@ -1,7 +1,8 @@
 <script>
+	import { ResponsiveVis } from '$lib';
+
 	import StatusBar from '$lib/ui/StatusBar.svelte';
 	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
-	import ResponsiveVis from '$lib/ResponsiveVis.svelte';
 
 	// import { default as marieboucher } from '$lib/data/marie-boucher/marieboucher.csv';
 	import * as links from '$lib/data/les-mis/les-mis-links.json';

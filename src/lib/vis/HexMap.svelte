@@ -1,8 +1,9 @@
 <script module>
 	import { max, min } from 'd3-array';
 	import { renderHexJSON } from 'd3-hexjson';
+	import { fitRect, getAspectRatioDifference } from '$lib/vis/d3MapHelpers.js';
 
-	export function createHexMap(hex) {
+	function createHexMap(hex) {
 		// Initialize the hexes at an arbitrary size of 500x500
 		const hexes = renderHexJSON(hex, 500, 500);
 		// get positions of vertices (same for all hexes)
@@ -24,10 +25,26 @@
 
 		return { hexes, bounds, hexAR, hexInitSize, hexWidth };
 	}
+
+	// conditions
+
+	function minHexSize(minSize, hex) {
+		const { hexInitSize, hexWidth } = createHexMap(hex);
+		return (w, h) => {
+			const { s } = fitRect(hexInitSize, [w, h]);
+			return hexWidth * s > minSize;
+		};
+	}
+
+	function maxAspectRatioDiff(maxDiff, hex) {
+		const { hexAR } = createHexMap(hex);
+		return (w, h) => getAspectRatioDifference(hexAR, w / h) < maxDiff;
+	}
+
+	export { minHexSize, maxAspectRatioDiff };
 </script>
 
 <script>
-	import { fitRect } from './d3MapHelpers.js';
 	import FillLegend from './FillLegend.svelte';
 	import Tooltip from './Tooltip.svelte';
 

@@ -1,14 +1,6 @@
-// helper/setup functions for circle + choropleth maps
+// helper/setup functions for d3 maps
 
-import { max } from 'd3-array';
-import { scaleSqrt } from 'd3-scale';
 import { geoPath } from 'd3-geo';
-
-export function getRadiusScale(data, maxCircle) {
-	return scaleSqrt()
-		.domain([0, max(data.features, (d) => d.properties.POP_EST)])
-		.range([0, maxCircle]);
-}
 
 export function getAreaSize(feature, path) {
 	// Find the size of the largest polygon in sq px

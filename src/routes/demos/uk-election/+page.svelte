@@ -4,22 +4,26 @@
 	import { scaleOrdinal } from 'd3-scale';
 	import { feature } from 'topojson-client';
 
+	import { ResponsiveVis, View } from '$lib';
+
+	import ChoroplethMap from '$lib/vis/ChoroplethMap.svelte';
+
+	import {
+		default as HexMap,
+		maxAspectRatioDiff as maxAspectRatioDiffHex,
+		minHexSize
+	} from '$lib/vis/HexMap.svelte';
+
+	import WaffleChart from '$lib/vis/WaffleChart.svelte';
+	import { maxAspectRatio } from '$lib/constraints/simple';
+
+	import StatusBar from '$lib/ui/StatusBar.svelte';
+
+	import { maxAspectRatioDiff, minAreaSize } from '$lib/constraints/d3MapConditions';
+
 	import * as map from '$lib/data/uk-election/merged.json';
 	import * as hex from '$lib/data/uk-election/test.hex.json';
 	import resultsRaw from '$lib/data/uk-election/HoC-GE2019-results-by-constituency-csv.csv?raw';
-
-	import ChoroplethMap from '$lib/vis/ChoroplethMap.svelte';
-	import HexMap from '$lib/vis/HexMap.svelte';
-	import WaffleChart from '$lib/vis/WaffleChart.svelte';
-
-	import StatusBar from '$lib/ui/StatusBar.svelte';
-	import { ResponsiveVis, View } from '$lib';
-	import { maxAspectRatio } from '$lib/constraints/simple';
-	import {
-		maxAspectRatioDiff as maxAspectRatioDiffHex,
-		minHexSize
-	} from '$lib/constraints/hexMapConditions';
-	import { maxAspectRatioDiff, minAreaSize } from '$lib/constraints/d3MapConditions';
 
 	let width = $state();
 	let height = $state();

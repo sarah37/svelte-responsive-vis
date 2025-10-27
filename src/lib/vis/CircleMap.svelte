@@ -1,7 +1,29 @@
+<script module>
+	import { scaleSqrt } from 'd3-scale';
+	import { max } from 'd3-array';
+
+	import { getMapScaleTranslate, getMapSetup } from './d3MapHelpers';
+
+	function getRadiusScale(data, maxCircle) {
+		return scaleSqrt()
+			.domain([0, max(data.features, (d) => d.properties.POP_EST)])
+			.range([0, maxCircle]);
+	}
+
+	export function minCircleRadius(minCircleRadius, maxCircle, projection, data) {
+		const pop_vals = data.features.map((d) => d.properties.POP_EST);
+		const lower_bound = pop_vals.sort((a, b) => a - b)[Math.floor(pop_vals.length * 0.1)]; // find size of circle at lowest 10% size
+		const r = getRadiusScale(data, maxCircle);
+		const { mapAR, mapInitSize } = getMapSetup(data, projection);
+
+		return (w, h) =>
+			r(lower_bound) * getMapScaleTranslate(w, h, mapAR, mapInitSize).s > minCircleRadius; // min r - at least 90% of circles visible
+	}
+</script>
+
 <script>
 	import { forceSimulation, forceX, forceY, forceCollide } from 'd3-force';
 
-	import { getMapSetup, getMapScaleTranslate, getRadiusScale } from './d3MapHelpers.js';
 	import Tooltip from './Tooltip.svelte';
 	import CircleLegend from './CircleLegend.svelte';
 

@@ -1,12 +1,12 @@
 <script>
-	import * as data from '$lib/data/movies/movies.json';
+	import { ResponsiveVis } from '$lib';
 
 	import VegaLiteWrapper from '$lib/vis/VegaLiteWrapper.svelte';
-
 	import StatusBar from '$lib/ui/StatusBar.svelte';
 	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
-	import ResponsiveVis from '$lib/ResponsiveVis.svelte';
 	import maxOverplotting from '$lib/constraints/maxOverplotting';
+
+	import * as data from '$lib/data/movies/movies.json';
 
 	let width = $state(),
 		height = $state();
