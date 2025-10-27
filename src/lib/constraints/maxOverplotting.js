@@ -1,3 +1,4 @@
+import { extent, max } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
 
 function dist(a, b) {
@@ -6,25 +7,42 @@ function dist(a, b) {
 	return Math.sqrt(dx * dx + dy * dy);
 }
 
-export function maxOverplotting(max, pos, r) {
+export function maxOverplotting(
+	maxScore,
+	pos,
+	r,
+	marginX = 0,
+	marginY = 0,
+	xDomain = undefined,
+	yDomain = undefined
+) {
+	// if x/y range are not provided, use the min/max values in the dataset
+	xDomain = xDomain ?? extent(pos, (d) => d[0]);
+	yDomain = yDomain ?? extent(pos, (d) => d[1]);
+
 	// n choose 2 -- the number of unique pairs in the dataset
 	// this number is what the overlap score would be if all points were fully identical
 	const normalization_factor = (pos.length * (pos.length - 1)) / 2;
 
-	const cellSize = 2 * r;
+	const cellSize = 2 * r; // smallest cell that will capture all potentially overlapping circles within its direct neighbors
 
 	return (w, h) => {
-		if (!w | !h) return true;
-		// recreate scales used internally in vega
-		const x = scaleLinear().domain([0, 10]).range([0, w]);
-		const y = scaleLinear().domain([0, 100]).range([0, h]);
+		if (!w || !h) return true;
+		// recreate scales used in the scatterplot
+		// ensuring that range does not go negative
+		const x = scaleLinear()
+			.domain(xDomain)
+			.range([0, max([0, w - marginX])]);
+		const y = scaleLinear()
+			.domain(yDomain)
+			.range([0, max([0, h - marginY])]);
 
 		// define grid parameters
-		const cols = Math.ceil(w / cellSize);
-		const rows = Math.ceil(h / cellSize);
+		const cols = Math.ceil(w / cellSize) + 1;
+		const rows = Math.ceil(h / cellSize) + 1;
 
 		// initialize empty grid array
-		const grid = Array.from({ length: rows }, () => Array.from({ length: cols }, () => []));
+		const grid = Array.from({ length: cols }, () => Array.from({ length: rows }, () => []));
 
 		// apply scales to data
 		const positions = pos.map(([px, py]) => [x(px), y(py)]);
@@ -34,10 +52,11 @@ export function maxOverplotting(max, pos, r) {
 			const col = Math.floor(px / cellSize);
 			const row = Math.floor(py / cellSize);
 			try {
-				grid[row][col].push(i);
+				grid[col][row].push(i);
 			} catch {
-				console.warn(`grid mapping failed: col ${col} row ${row}`);
-				// console.table(grid);
+				console.warn(
+					`grid mapping failed: col ${col} row ${row} px ${px} py ${py} i ${i} cols ${cols} ${grid.length} rows ${rows} ${grid[0].length} `
+				);
 			}
 		});
 
@@ -55,12 +74,12 @@ export function maxOverplotting(max, pos, r) {
 			for (let dx = -1; dx <= 1; dx++) {
 				for (let dy = -1; dy <= 1; dy++) {
 					if (
-						currentRow + dx >= 0 &&
-						currentCol + dy >= 0 &&
-						currentRow + dx < rows &&
-						currentCol + dy < cols
+						currentCol + dx >= 0 &&
+						currentRow + dy >= 0 &&
+						currentCol + dx < cols &&
+						currentRow + dy < rows
 					) {
-						const currentCell = grid[currentRow + dx][currentCol + dy];
+						const currentCell = grid[currentCol + dx][currentRow + dy];
 						// iterate through all points in cell
 						for (const j of currentCell) {
 							// so we don't double count and don't compare points to themselves
@@ -78,6 +97,6 @@ export function maxOverplotting(max, pos, r) {
 				}
 			}
 		}
-		return overplotting / normalization_factor < max;
+		return overplotting / normalization_factor < maxScore;
 	};
 }

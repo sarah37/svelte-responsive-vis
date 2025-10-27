@@ -21,6 +21,14 @@
 
 	const radius = 3.09; // default size of vega-lite circle is 30, i.e. radius of 3.09
 
+	// required for overlap condition
+	const marginX = 45 + 3; // left + right margin
+	const marginY = 35 + 10; // top + bottom margin
+
+	// manually set these so the plot shows the entire range of possible ratings
+	const xDomain = [0, 10];
+	const yDomain = [0, 100];
+
 	const vl_spec_scatterplot = {
 		$schema: 'https://vega.github.io/schema/vega-lite/v6.json',
 		data: {
@@ -81,10 +89,10 @@
 	bind:height
 	computeViewLandscape
 	viewLandscapeOverlay={landscapeOverlay}
-	viewLandscapeInterval={50}
+	viewLandscapeInterval={20}
 	bind:viewLandscape
 >
-	<View conditions={[maxOverplotting(0.0012, ratings, radius)]}>
+	<View conditions={[maxOverplotting(0.0012, ratings, radius, marginX, marginY, xDomain, yDomain)]}>
 		<VegaLiteWrapper spec={vl_spec_scatterplot} {height} {width} />
 	</View>
 	<View>
