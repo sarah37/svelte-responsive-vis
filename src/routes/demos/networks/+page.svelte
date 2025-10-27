@@ -1,18 +1,17 @@
 <script>
-	import { ResponsiveVis } from 'svelte-responsive-vis';
+	import { ResponsiveVis, View } from 'svelte-responsive-vis';
 
 	import StatusBar from '$lib/ui/StatusBar.svelte';
-	import ViewLandscapeOverlay from '$lib/ui/ViewLandscapeOverlay.svelte';
 
 	// import { default as marieboucher } from '$lib/data/marie-boucher/marieboucher.csv';
 	import * as links from '$lib/data/les-mis/les-mis-links.json';
 	import * as nodes from '$lib/data/les-mis/les-mis-nodes.json';
 
-	import NetPanorama from '$lib/vis/NetPanorama.svelte';
 	import {
+		default as NetPanorama,
 		minAdjacencyMatrixLabelSize,
 		minArcDiagramLabelSize
-	} from '$lib/constraints/netPanoramaConditions';
+	} from '$lib/vis/NetPanorama.svelte';
 
 	let width = $state(),
 		height = $state();
@@ -316,28 +315,6 @@
 		]
 	});
 
-	let views = $derived([
-		{
-			type: NetPanorama,
-			data: null, // data is included in spec
-			params: { spec: spec_adjacency_matrix },
-			conditions: [minAdjacencyMatrixLabelSize(6, spec_adjacency_matrix)]
-		},
-
-		{
-			type: NetPanorama,
-			data: null, // data is included in spec
-			params: { spec: spec_arcdiagram },
-			conditions: [minArcDiagramLabelSize(6, spec_arcdiagram)]
-		},
-		{
-			type: NetPanorama,
-			data: null, // data is included in spec
-			params: { spec: spec_nodelink },
-			conditions: []
-		}
-	]);
-
 	let viewLandscape = $state(),
 		landscapeOverlay = $state();
 </script>
@@ -358,14 +335,21 @@
 </StatusBar>
 
 <ResponsiveVis
-	{views}
+	resizable
 	maxSize={{ w: 1000, h: 1000 }}
 	bind:width
 	bind:height
-	computeViewLandscape={true}
 	bind:viewLandscape
+	computeViewLandscape
+	viewLandscapeOverlay={landscapeOverlay}
 >
-	{#if landscapeOverlay}
-		<ViewLandscapeOverlay {viewLandscape} />
-	{/if}
+	<View conditions={[minAdjacencyMatrixLabelSize(6, spec_adjacency_matrix)]}>
+		<NetPanorama spec={spec_adjacency_matrix} {width} {height} />
+	</View>
+	<View conditions={[minArcDiagramLabelSize(6, spec_arcdiagram)]}>
+		<NetPanorama spec={spec_arcdiagram} {width} {height} />
+	</View>
+	<View>
+		<NetPanorama spec={spec_nodelink} {width} {height} />
+	</View>
 </ResponsiveVis>

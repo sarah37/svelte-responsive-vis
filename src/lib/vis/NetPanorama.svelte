@@ -1,7 +1,36 @@
+<script module>
+	// conditions -- only based on spec, does not require anything to be rendered
+
+	function minAdjacencyMatrixLabelSize(min, spec) {
+		const labelHeight = spec.height - (spec.y ? spec.y : 0);
+		const nNodes = spec.data[0].values.length;
+		const totalHeight = spec.height + (spec.y ? spec.y : 0);
+		const totalWidth = spec.width + (spec.x ? spec.x : 0);
+
+		return (w, h) => {
+			const s = Math.min(h / totalHeight, w / totalWidth);
+			return s * (labelHeight / nNodes) > min;
+		};
+	}
+
+	function minArcDiagramLabelSize(min, spec) {
+		const nNodes = spec.data[0].values.length;
+		const totalHeight = spec.height + (spec.y ? spec.y : 0);
+		const totalWidth = spec.width + (spec.x ? spec.x : 0);
+
+		return (w, h) => {
+			const s = Math.min(h / totalHeight, w / totalWidth);
+			return s * (spec.height / nNodes) > min;
+		};
+	}
+
+	export { minAdjacencyMatrixLabelSize, minArcDiagramLabelSize };
+</script>
+
 <script>
 	import { resolve } from '$app/paths';
 
-	let { params, context, display } = $props();
+	let { spec, width, height } = $props();
 
 	// suppress console logs (the library logs a lot)
 	// console.log = function () {};
@@ -10,13 +39,8 @@
 	const uid = $props.id();
 	const div = `netpanorama-div-${uid}`;
 
-	let height = $derived(context.height);
-	let width = $derived(context.width);
-
 	let svg = $state(); // will be assigned once defined below
 	let g = $state();
-
-	const spec = params.spec;
 
 	$effect(() => {
 		// render spec
@@ -58,4 +82,4 @@
 	<!-- importing via import in the script doesn't work because window is not defined at that point -->
 </svelte:head>
 
-<div id={div} style="display: {display ? 'block' : 'none'}"></div>
+<div id={div}></div>
