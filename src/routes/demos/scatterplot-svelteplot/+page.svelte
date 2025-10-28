@@ -4,7 +4,7 @@
 	import { Plot, Rect, Dot, bin } from 'svelteplot';
 
 	import { ResponsiveVis, View } from 'svelte-responsive-vis';
-	import { maxOverplotting } from 'svelte-responsive-vis/constraints';
+	import { maxOverplotting } from 'svelte-responsive-vis/conditions';
 
 	// prepare data for the binned heatmap
 	let movies_binned = $derived(

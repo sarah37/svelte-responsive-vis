@@ -3,7 +3,7 @@
 	import * as data_americas from '$lib/data/world-population/subset_americas.json';
 
 	import { ResponsiveVis, View } from 'svelte-responsive-vis';
-	import { minAspectRatio, maxAspectRatioDiff } from 'svelte-responsive-vis/constraints';
+	import { minAspectRatio, maxAspectRatioDiff } from 'svelte-responsive-vis/conditions';
 
 	import StatusBar from '$lib/ui/StatusBar.svelte';
 

@@ -1,6 +1,6 @@
 <script>
 	import { ResponsiveVis, View } from 'svelte-responsive-vis';
-	import { maxOverplotting } from 'svelte-responsive-vis/constraints';
+	import { maxOverplotting } from 'svelte-responsive-vis/conditions';
 
 	import VegaLiteWrapper from '$lib/vis/VegaLiteWrapper.svelte';
 	import StatusBar from '$lib/ui/StatusBar.svelte';

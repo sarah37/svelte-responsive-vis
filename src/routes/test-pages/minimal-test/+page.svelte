@@ -1,6 +1,6 @@
 <script>
 	import { ResponsiveVis, View } from 'svelte-responsive-vis';
-	import { minHeight, minWidth } from 'svelte-responsive-vis/constraints';
+	import { minHeight, minWidth } from 'svelte-responsive-vis/conditions';
 
 	import TestVis from '$lib/vis/TestVis.svelte';
 

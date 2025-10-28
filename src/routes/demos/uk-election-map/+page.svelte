@@ -9,7 +9,7 @@
 		maxAspectRatioDiff,
 		minAreaSize,
 		maxAspectRatio
-	} from 'svelte-responsive-vis/constraints';
+	} from 'svelte-responsive-vis/conditions';
 
 	import ChoroplethMap from '$lib/vis/ChoroplethMap.svelte';
 	import {
