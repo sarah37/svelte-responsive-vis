@@ -1,18 +1,18 @@
 <script>
-	import { geoEqualEarth, schemeTableau10, scaleOrdinal } from 'd3';
-
 	import * as data from '$lib/data/world-population/world_with_continent.json';
 	import * as data_americas from '$lib/data/world-population/subset_americas.json';
 
-	import StatusBar from '$lib/components/StatusBar.svelte';
-	import ResponsiveVis from '$lib/components/ResponsiveVis.svelte';
-	import ViewLandscapeOverlay from '$lib/components/ViewLandscapeOverlay.svelte';
+	import { ResponsiveVis, View } from 'svelte-responsive-vis';
+	import { minAspectRatio, maxAspectRatioDiff } from 'svelte-responsive-vis/conditions';
 
-	import CircleMap from '$lib/components/vis/CircleMap.svelte';
-	import VegaLiteWrapper from '$lib/components/vis/VegaLiteWrapper.svelte';
+	import StatusBar from '$lib/ui/StatusBar.svelte';
 
-	import { minAspectRatio } from '$lib/constraints/simple.js';
-	import { maxAspectRatioDiff, minCircleRadius } from '$lib/constraints/d3MapConditions.js';
+	import { default as CircleMap, minCircleRadius } from '$lib/vis/CircleMap.svelte';
+
+	import { geoEqualEarth } from 'd3-geo';
+	import { schemeTableau10 } from 'd3-scale-chromatic';
+	import { scaleOrdinal } from 'd3-scale';
+	import { Plot, BarX, BarY } from 'svelteplot';
 
 	let width = $state(),
 		height = $state();
@@ -48,9 +48,8 @@
 	// checkbox to toggle aspect ratio conditions
 	let arConditions = $state(false);
 
-	// colors for circles/bars colored by continent
-	const continents = {
-		world: [
+	const colorScale = {
+		domain: [
 			'North America',
 			'Asia',
 			'Oceania',
@@ -59,34 +58,26 @@
 			'Africa'
 			// 'Antarctica'
 		],
-		americas: ['North America', 'South America']
+		scheme: schemeTableau10
 	};
-	const continent_colors = {
-		world: schemeTableau10,
-		americas: [schemeTableau10[0], schemeTableau10[3]]
-	};
-	let circleColor = $derived((d) =>
-		scaleOrdinal().domain(continents[selectedDataset]).range(continent_colors[selectedDataset])(
-			d.properties.continent
-		)
-	);
+
+	const circleColor = (d) =>
+		scaleOrdinal().domain(colorScale.domain).range(colorScale.scheme)(d.properties.continent);
 
 	// prep data for bar chart
 	function getBarData(geojson) {
-		return {
-			default: geojson.features
-				.map((d) => {
-					return {
-						adm: replace(d.properties.ADMIN),
-						pop: d.properties.POP_EST,
-						continent: d.properties.continent
-					};
-				})
-				.sort((a, b) => b.pop - a.pop) // sort by population (descending order)
-				.map((d, i) => {
-					return { ...d, i }; // add index (for filtering most populous countries)
-				})
-		};
+		return geojson.features
+			.map((d) => {
+				return {
+					adm: replace(d.properties.ADMIN),
+					pop: d.properties.POP_EST,
+					continent: d.properties.continent
+				};
+			})
+			.sort((a, b) => b.pop - a.pop) // sort by population (descending order)
+			.map((d, i) => {
+				return { ...d, i }; // add index (for filtering most populous countries)
+			});
 	}
 
 	// bar chart - abbreviate some long country names to limit the space required for axes
@@ -103,142 +94,7 @@
 		}
 	}
 
-	// Vega Lite spec for bar charts (vertical + horizontal)
-	let vl_barchart_vertical = $derived({
-		$schema: 'https://vega.github.io/schema/vega-lite/v6.json',
-		data: { values: getBarData(datasets[selectedDataset].data).default },
-		height: { step: 17 },
-		mark: 'bar',
-		encoding: {
-			x: {
-				field: 'adm',
-				type: 'ordinal',
-				sort: '-y',
-				axis: {
-					labelAngle: -45,
-					title: 'Country'
-				}
-			},
-			y: {
-				field: 'pop',
-				type: 'quantitative',
-				axis: {
-					format: '.2s',
-					title: 'Population'
-				}
-			},
-			color: {
-				field: 'continent',
-				scale: { range: continent_colors[selectedDataset], domain: continents[selectedDataset] },
-				legend: { orient: 'top-right', title: null, offset: 5 }
-			}
-		}
-	});
-	let vl_barchart_horizontal = $derived({
-		$schema: 'https://vega.github.io/schema/vega-lite/v6.json',
-		data: { values: getBarData(datasets[selectedDataset].data).default },
-		height: { step: 17 },
-		mark: 'bar',
-		encoding: {
-			x: {
-				field: 'pop',
-				type: 'quantitative',
-				axis: {
-					format: '.2s',
-					title: 'Population'
-				}
-			},
-			y: {
-				field: 'adm',
-				type: 'ordinal',
-				sort: '-x',
-				axis: {
-					labelAngle: 0,
-					title: 'Country'
-				}
-			},
-			color: {
-				field: 'continent',
-				scale: { range: continent_colors[selectedDataset], domain: continents[selectedDataset] },
-				legend: { orient: 'bottom-right', title: null, offset: 5 }
-			}
-		}
-	});
-
-	let views = $derived([
-		{
-			type: CircleMap, // configured as proportional circle map
-			data: datasets[selectedDataset].data,
-			params: {
-				projection: datasets[selectedDataset].projection,
-				bounds: datasets[selectedDataset].bounds,
-				circleColor: circleColor,
-				maxCircle: datasets[selectedDataset].maxCircle
-			},
-			conditions: [
-				minCircleRadius(
-					1,
-					datasets[selectedDataset].maxCircle,
-					datasets[selectedDataset].projection,
-					datasets[selectedDataset].data
-				),
-				arConditions
-					? maxAspectRatioDiff(
-							1.5,
-							datasets[selectedDataset].projection,
-							datasets[selectedDataset].data
-						)
-					: () => true
-			]
-		},
-		{
-			type: CircleMap, // configured as Dorling
-			data: datasets[selectedDataset].data,
-			params: {
-				dorling: true,
-				projection: datasets[selectedDataset].projection,
-				circleColor: circleColor,
-				maxCircle: datasets[selectedDataset].maxCircleDorling
-			},
-			conditions: [
-				minCircleRadius(
-					1,
-					datasets[selectedDataset].maxCircleDorling,
-					datasets[selectedDataset].projection,
-					datasets[selectedDataset].data
-				),
-				arConditions
-					? maxAspectRatioDiff(
-							1.5,
-							datasets[selectedDataset].projection,
-							datasets[selectedDataset].data
-						)
-					: () => true
-			]
-		},
-		{
-			type: VegaLiteWrapper,
-			data: getBarData(datasets[selectedDataset].data),
-			params: {
-				spec: vl_barchart_vertical,
-				filter: (w, h) => {
-					return `datum.i < ${(w - 20) / 20}`;
-				}
-			},
-			conditions: [minAspectRatio(1)] // landscape format
-		},
-		{
-			type: VegaLiteWrapper,
-			data: getBarData(datasets[selectedDataset].data),
-			params: {
-				spec: vl_barchart_horizontal,
-				filter: (w, h) => {
-					return `datum.i < ${(h - 20) / 20}`;
-				}
-			},
-			conditions: []
-		}
-	]);
+	const barData = $derived(getBarData(datasets[selectedDataset].data));
 
 	let viewLandscape = $state(),
 		landscapeOverlay = $state();
@@ -251,7 +107,7 @@
 <StatusBar {width} {height} bind:landscapeOverlay bind:viewLandscape>
 	Select dataset:
 	<select bind:value={selectedDataset}>
-		{#each datasetsKeys as dataset}
+		{#each datasetsKeys as dataset (dataset)}
 			<option value={dataset}>
 				{datasets[dataset].label}
 			</option>
@@ -263,16 +119,97 @@
 </StatusBar>
 
 <ResponsiveVis
-	{views}
+	resizable
 	initSize={{ w: 1000, h: 600 }}
 	maxSize={{ w: 1000, h: 700 }}
 	minSize={{ w: 200, h: 200 }}
 	bind:width
 	bind:height
-	computeViewLandscape={true}
+	computeViewLandscape
+	viewLandscapeOverlay={landscapeOverlay}
 	bind:viewLandscape
 >
-	{#if landscapeOverlay}
-		<ViewLandscapeOverlay {viewLandscape} />
-	{/if}
+	<View
+		{width}
+		{height}
+		conditions={[
+			minCircleRadius(
+				1,
+				datasets[selectedDataset].maxCircle,
+				datasets[selectedDataset].projection,
+				datasets[selectedDataset].data
+			),
+			arConditions
+				? maxAspectRatioDiff(
+						1.5,
+						datasets[selectedDataset].projection,
+						datasets[selectedDataset].data
+					)
+				: () => true
+		]}
+	>
+		<CircleMap
+			{width}
+			{height}
+			data={datasets[selectedDataset].data}
+			projection={datasets[selectedDataset].projection}
+			bounds={datasets[selectedDataset].bounds}
+			{circleColor}
+			maxCircle={datasets[selectedDataset].maxCircle}
+		/>
+	</View>
+	<View
+		conditions={[
+			minCircleRadius(
+				1,
+				datasets[selectedDataset].maxCircleDorling,
+				datasets[selectedDataset].projection,
+				datasets[selectedDataset].data
+			),
+			arConditions
+				? maxAspectRatioDiff(
+						1.5,
+						datasets[selectedDataset].projection,
+						datasets[selectedDataset].data
+					)
+				: () => true
+		]}
+	>
+		<CircleMap
+			{width}
+			{height}
+			data={datasets[selectedDataset].data}
+			dorling
+			projection={datasets[selectedDataset].projection}
+			{circleColor}
+			maxCircle={datasets[selectedDataset].maxCircleDorling}
+		/>
+	</View>
+	<View conditions={[minAspectRatio(1)]}>
+		<Plot
+			{height}
+			x={{ tickRotate: -45, label: false }}
+			y={{ label: 'Population ↑' }}
+			color={colorScale}
+		>
+			<BarY
+				data={barData.filter((d) => d.i < (width - 20) / 20)}
+				y="pop"
+				x="adm"
+				fill="continent"
+				sort={{ channel: '-y' }}
+			/>
+		</Plot>
+	</View>
+	<View>
+		<Plot {height} x={{ label: 'Population →' }} y={{ label: false }} color={colorScale}>
+			<BarX
+				data={barData.filter((d) => d.i < (height - 20) / 20)}
+				x="pop"
+				y="adm"
+				fill="continent"
+				sort={{ channel: '-x' }}
+			/>
+		</Plot>
+	</View>
 </ResponsiveVis>
