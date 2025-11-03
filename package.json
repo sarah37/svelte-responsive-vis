@@ -1,10 +1,18 @@
 {
 	"name": "svelte-responsive-vis",
-	"private": true,
+	"description": "Svelte library for developing responsive visualizations with constraint-based breakpoints.",
 	"version": "0.0.1",
 	"author": "Sarah Schöttler (https://sarahschoettler.com)",
 	"license": "BSD-3-Clause",
 	"type": "module",
+	"homepage": "https://github.com/sarah37/svelte-responsive-vis",
+	"bugs": {
+		"url": "https://github.com/sarah37/svelte-responsive-vis/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sarah37/svelte-responsive-vis.git"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
@@ -57,12 +65,21 @@
 		"!dist/**/*.spec.*"
 	],
 	"keywords": [
-		"svelte"
+		"svelte",
+		"dataviz",
+		"visualization",
+		"responsive",
+		"vis",
+		"viz"
 	],
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js"
+		},
+		"./conditions": {
+			"types": "./dist/conditions/index.d.ts",
+			"svelte": "./dist/conditions/index.js"
 		}
 	},
 	"sideEffects": [

@@ -2,6 +2,10 @@
 
 `svelte-responsive-vis` is a Svelte 5 library that facilitates creating responsive visualizations with multiple views for different sizes. The library implements _constraint-based breakpoints_, a novel approach to responsive visualization introduced in our paper [Constraint-Based Breakpoints for Responsive Visualization Design and Development](https://doi.org/10.1109/TVCG.2024.3410097).
 
+## Demos
+
+[View demos here](https://sarah37.github.io/svelte-responsive-vis)
+
 ## Getting Started
 
 ### Installation
@@ -14,53 +18,13 @@ npm install svelte-responsive-vis
 
 To create a responsive visualization, `import { ResponsiveVis, View } from 'svelte-responsive-vis'`, as well as import any conditions you want to use from (see [below](#conditions)) from `svelte-responsive-vis/conditions`. Use a visualization library of your choice to create the visualizations for each view. We recommend [SveltePlot]() for (more or less) standard visualization designs and D3 for anything custom.
 
-- Add a resizable demo
-- Link to svelte playground
-- Example code
-
 ### `ResponsiveVis` and the `View` component
 
 A new responsive visualization is created using the `ResponsiveVis` component. You can then nest as many or a few views as required, using the `View` component. Inside each `View`, render the visualization design for the view using your visualization library of choice. You can use any visualization library compatible with Svelte 5 for this and you can combine multiple libraries in one responsive visualization if you wish. We have demos for SveltePlot (recommended), Vega-Lite (or Vega), and custom visualizations created with D3.
 
-This demo creates a scatterplot which turns into a binned heatmap when the circles in the scatterplot begin to overlap excessively (resize the container to see the change):
-
-```svelte
-<ResponsiveVis resizable bind:height>
-	<View
-		conditions={[
-			maxOverplotting(0.0012, ratings, scatter_radius, marginX, marginY, xDomain, yDomain)
-		]}
-	>
-		<Plot grid {height} x={{ domain: xDomain }} y={{ domain: yDomain }}>
-			<Dot
-				r={scatter_radius}
-				data={movies.default}
-				x="IMDB Rating"
-				y="Rotten Tomatoes Rating"
-				stroke="#0006"
-			/>
-		</Plot>
-	</View>
-	<View>
-		<Plot color={{ scheme: 'YlGnBu' }} {height}>
-			<Rect
-				{...bin(
-					{ data: movies.default, x: 'IMDB Rating', y: 'Rotten Tomatoes Rating' },
-					{ fill: 'count' }
-				)}
-			/>
-		</Plot>
-	</View>
-</ResponsiveVis>
-```
-
-[demo]
-
-[svelte playground]
-
 ### Conditions
 
-The package includes a couple of condition functions to get you started. (footnote, in the paper these are called constraints). You can import these from `svelte-responsive-vis/conditions`.
+The package includes a couple of condition functions to get you started. You can import these from `svelte-responsive-vis/conditions`.
 There are a few simple ones that don’t use any information about the visualization itself:
 
 - `minWidth(min)` – sets a minimum width (in px)
@@ -79,15 +43,16 @@ There are conditions specifically for maps with D3:
 
 For scatterplots and other visualizations with equally sized circle marks, the package provides a condition to limit the amount of allowed overlap:
 
-```
+```js
 maxOverplotting(
--	    maxScore,
--	    pos,
--	    r,
--	    marginX = 0,
--	    marginY = 0,
--	    xDomain = undefined,
--	    yDomain = undefined
+	maxScore, // max ratio of permitted overlap
+	pos, // position vectors for the x and y coordinates
+	r, // radius of the plotted points/circles
+	marginX, // optional: left/right margins of the plot, 0 if not provided
+	marginY, // optional: top/bottom margins of the plot, 0 if not provided
+	xDomain, // optional: domain for x values, otherwise the extent of the provided data will be used
+	yDomain // optional: domain for y values, otherwise the extent of the provided data will be used
+);
 ```
 
 It is straightforward to implement additional conditions specific to the visualization designs you want to use. Some examples of custom conditions can be found in the demos. A valid condition returns a function that takes two arguments – the width and height of the container – and returns `true` (or another truthy value) if the condition is fulfilled, and `false` (or another falsy value) if not. The provided conditions are all implemented as functions that take in various parameters (such as the desired minimum aspect ratio) and return such a function. For example, here’s how the minAspectRatio condition function is implemented:
